@@ -986,6 +986,12 @@ SyncManager::NewSubscriptions(ITetrisNode *node)
         Subscription* subscription = *subIt;
         node->m_subscriptionCollection->push_back(subscription);
         m_subscriptionCollection->push_back(subscription);
+        
+        #ifdef LOG_ON
+                stringstream log;
+                log << "iCS --> NewSubscriptions() The node " << node->m_icsId << " requested subscriptions " <<  subscription->m_name  << " for " << subscription->m_nodeId ;
+                IcsLog::LogLevel((log.str()).c_str(), kLogLevelInfo);
+        #endif        
 
         Subscription& sub = *subscription;
         const std::type_info& typeinfo = typeid(sub);
@@ -2655,8 +2661,12 @@ SyncManager::RefreshScheduledTopobroadcastMessageTable()
 int
 SyncManager::ProcessGeobroadcastMessages(ScheduledGeobroadcastMessageData message, stationID_t receiverID)
 {
+
+
+
     // reference to the app that triggered the geobroadcasting
-    int appId;
+    int appType;
+    int messageId;
     actionID_t actionID; // reference of the message for the APP_MSG_RECEIVE
     // Check if the message was scheduled
     if (ScheduledGeobroadcastMessageTable.size() > 0) {
@@ -2669,23 +2679,37 @@ SyncManager::ProcessGeobroadcastMessages(ScheduledGeobroadcastMessageData messag
                 if ((*messageIterator).received == false) {
                     (*messageIterator).received = true;
                 }
-                appId = (*messageIterator).appMessageId;
+ 
+ 
+                ////////////////////////////////////
+                // CHANGED by Florent KAISSER, 06/06/2016
+                // Fix bug
+                // Get also the application type. No confound
+                // message Id and application type Id !
+                // We must use getReceivedMessagePayload to
+                //   retreive the type in stored payload.
+                //                
+                messageId = (*messageIterator).appMessageId;
+                appType = m_facilitiesManager->getApplicationMessageType(actionID);
+                ///////////////////////////////////
             }
         }
     } else {
         IcsLog::LogLevel("ProcessGeobroadcastMessages() There isn't any scheduled GEOBROADCAST message for the received message",kLogLevelWarning);
         return EXIT_SUCCESS;
     }
-
+    
+    ///////////////////
+    // COMMENTED by Florent KAISSER, 06/03/2016
+    // Fix bug
+    //    use ProcessAppMessages    
+    /*
     // 1. Get reference to receiver
     ITetrisNode* receiver = GetNodeByNs3Id(receiverID);
 
     // 2. Check whether the receiver runs app that has subscription able to process the message
-    ///////////////////
-    // COMMENTED by Florent KAISSER, 05/30/2016
-    // Fix bug
-    //    subscription not used in this method
-    /*Subscription* subscription = NULL;
+
+    Subscription* subscription = NULL;
     for (vector<Subscription*>::iterator it = receiver->m_subscriptionCollection->begin(); it != receiver->m_subscriptionCollection->end(); ++it) {
         if ((*it)->m_appId == appId) {
             subscription = *it;
@@ -2697,10 +2721,13 @@ SyncManager::ProcessGeobroadcastMessages(ScheduledGeobroadcastMessageData messag
         log << "ProcessGeobroadcastMessages() The message has no subscription to be processed.";
         IcsLog::LogLevel((log.str()).c_str(), kLogLevelWarning);
         return EXIT_SUCCESS;
-    }*/
+    }
     
 
     // 3. Process subscription
+    
+    
+    */
 
     ScheduledAPPMessageData appMessage;
     ///////////////////
@@ -2716,7 +2743,9 @@ SyncManager::ProcessGeobroadcastMessages(ScheduledGeobroadcastMessageData messag
     appMessage.senderIcsID = message.senderIcsID;
     appMessage.receiverIcsID = message.receiverIcsID;
     appMessage.actionID = actionID;
-    appMessage.appMessageId = appId;
+    appMessage.appMessageId = messageId;
+    appMessage.appMessageType = appType;
+
 
    if (ProcessAppMessages(appMessage) == EXIT_FAILURE) {
 #ifdef LOG_ON
@@ -2727,17 +2756,11 @@ SyncManager::ProcessGeobroadcastMessages(ScheduledGeobroadcastMessageData messag
   
       return EXIT_FAILURE;
    }
+  
+  ///////////////////////////////////////
 
-    ///////////////////
-    // COMMENTED by Florent KAISSER, 05/30/2016
-    // Fix bug
-    // ProcessReceivedGeobroadcastMessage called in ProcessAppMessages itself called above
-    /*if (subscription->ProcessReceivedGeobroadcastMessage(message, GetAddress()) == EXIT_FAILURE) {
-        IcsLog::LogLevel("ProcessGeobroadcastMessages() Error processing geobroadcast message.", kLogLevelError);
-        return EXIT_FAILURE;
-    }*/
 
-    return EXIT_SUCCESS;
+  return EXIT_SUCCESS;
 }
 
 int
@@ -2750,7 +2773,8 @@ SyncManager::ProcessAppMessages(ScheduledAPPMessageData appMessage)
   // 2. Check whether the receiver runs app that has subscription able to process the message
   Subscription* subscription = NULL;
   for (vector<Subscription*>::iterator it = receiver->m_subscriptionCollection->begin(); it != receiver->m_subscriptionCollection->end(); ++it) {
-    if ((*it)!=NULL && (*it)->m_appId == appMessage.appMessageId) {
+    //CHANGED by Florent KAISSER, 06/06/2016, use appType to compare the application type id
+    if ((*it)!=NULL && (*it)->m_appId == appMessage.appMessageType) {
       subscription = *it;
       break;
     }
@@ -2759,7 +2783,7 @@ SyncManager::ProcessAppMessages(ScheduledAPPMessageData appMessage)
     stringstream log;
     log << "ProcessAppMessages() The message has no subscription to be processed.";
     IcsLog::LogLevel((log.str()).c_str(), kLogLevelWarning);
-    return EXIT_FAILURE;
+    return EXIT_SUCCESS;
   }
 
   // 3. Process subscription

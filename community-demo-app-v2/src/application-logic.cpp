@@ -44,7 +44,7 @@ bool ApplicationLogic::m_returnCarAreaIsSet = false;
 vector<Vehicle> ApplicationLogic::m_vehiclesInArea;
 vector<AppMessage> ApplicationLogic::m_messages;
 map<int,bool> ApplicationLogic::m_carRxSubs;
-int ApplicationLogic::m_messageCounter = 0;
+int ApplicationLogic::m_messageCounter = 5;
 Area ApplicationLogic::m_camArea;
 Area ApplicationLogic::m_carArea;
 int ApplicationLogic::m_appStartTimeStep;
@@ -254,7 +254,7 @@ ApplicationLogic::CheckForRequiredSubscriptions (int nodeId, int timestep){
 	   mySubsStorage.writeUnsignedByte(EXT_HEADER__CIRCLE); //Area type 
 	   mySubsStorage.writeFloat(290.0); //x
 	   mySubsStorage.writeFloat(255.0); //y
-	   mySubsStorage.writeFloat(100.0);	//radius   		           
+	   mySubsStorage.writeFloat(25.0);	//radius   		           
 
            break;  // we break on each successful occurence, as the iCS can only read ONE subscription at a time..we will be called again by the iCS as long as we have something to request
        }
