@@ -355,16 +355,53 @@ TraCIClient::CommandSetMaximumSpeed(const ITetrisNode &node, float maxSpeed)
     return EXIT_SUCCESS;
 }
 
+////////////////////////////////////////////////
+// ADDED by Florent KAISSER, 07/16/2016
 int
 TraCIClient::CommandSlowDown(const ITetrisNode &node, float speed, int duration)
 {
-    //TODO 160716 send message to SUMO
-    
-    //use CMD_SLOWDOWN
-    
-    return EXIT_FAILURE;
-    //return EXIT_SUCCESS;
+    if (m_socket == 0) {
+        cout << "iCS --> [ERROR] Socket is NULL" << endl;
+        return EXIT_FAILURE;
+    }
+
+    Storage outMsg, inMsg, tmpMsg;
+    tmpMsg.writeUnsignedByte(CMD_SET_VEHICLE_VARIABLE);// command id
+    tmpMsg.writeUnsignedByte(CMD_SLOWDOWN);// variable id
+    tmpMsg.writeString(node.m_tsId);// object id
+    tmpMsg.writeUnsignedByte(TYPE_DOUBLE); //data type
+    tmpMsg.writeDouble((double)speed);// value
+    tmpMsg.writeUnsignedByte(TYPE_INTEGER); //data type
+    tmpMsg.writeInt(duration);// value    
+
+    outMsg.writeUnsignedByte(0); // command length -> extended
+    outMsg.writeInt(1 + 4 + tmpMsg.size());
+    outMsg.writeStorage(tmpMsg);
+
+    try {
+        m_socket->sendExact(outMsg);
+    } catch (SocketException e) {
+        cout << "iCS --> Error while sending command: " << e.what() << endl;
+        return EXIT_FAILURE;
+    }
+
+#ifdef LOG_ON
+    stringstream log;
+    log << "Sending Slow down at " << speed << " while " << duration << " ms for node (SUMO ID): " << node.m_tsId;
+    IcsLog::LogLevel((log.str()).c_str(), kLogLevelInfo);
+#endif
+
+    // receive answer message
+    try {
+        m_socket->receiveExact(inMsg);
+    } catch (SocketException e) {
+        cout << "iCS --> #Error while receiving command: " << e.what() << endl;
+        return EXIT_FAILURE;
+    }
+
+    return EXIT_SUCCESS;
 }
+////////////////////////////////////////////////
 
 float
 TraCIClient::GetSpeed(const ITetrisNode &node)

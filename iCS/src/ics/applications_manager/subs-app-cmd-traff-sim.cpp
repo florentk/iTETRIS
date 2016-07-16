@@ -153,12 +153,22 @@ bool SubsAppCmdTraffSim::push(SyncManager* syncManager)
 
         break;
     }
+    
+    /////////////////////////////////////////////////////
+    // ADDED by Florent KAISSER, 07/16/2016
     case VALUE_SLOW_DOWN: {
     
-        //TODO 160716 read args and call method in TraCIClient
-        //syncManager->m_trafficSimCommunicator->CommandSlowDown
+        ics_types::stationID_t m_iCS_ID = m_msg.readInt();
+        ITetrisNode *node = syncManager->GetNodeByIcsId(m_iCS_ID);
+        
+        float speed = m_msg.readFloat();
+        int duration = m_msg.readInt();
+    
+        syncManager->m_trafficSimCommunicator->CommandSlowDown(*node, speed, duration);
         break;
     }
+    ////////////////////////////////////////////////////
+    
     default: {
         std::cout << "Impossible to send the command. Command not recognized." << std::endl;
         return false;

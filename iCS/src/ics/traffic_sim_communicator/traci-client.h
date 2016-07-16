@@ -117,6 +117,8 @@ public:
     
     
     /**
+    * @author Florent KAISSER
+    * @date 07/16/2016
     * @brief Sends a message to SUMO in order to changes the speed smoothly to 
     *   the given value over the given amount of time in ms. 
     *   See http://sumo.dlr.de/wiki/TraCI/Change_Vehicle_State#slow_down_.280x14.29

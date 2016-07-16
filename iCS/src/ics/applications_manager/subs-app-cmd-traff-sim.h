@@ -86,6 +86,7 @@ private:
 #define VALUE_RE_ROUTE   	    		0x03
 #define VALUE_GET_ROUTE_VARIABLE	 	0x04
 #define VALUE_SET_SPEED					0x05
+// ADDED by Florent KAISSER, 07/16/2016
 #define VALUE_SLOW_DOWN				    0x06
 
     //LGstd::vector<unsigned char> m_msg;
