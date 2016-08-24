@@ -84,12 +84,16 @@ geoBroadcast::RouteOutput (Ptr<Packet> p, c2cCommonHeader::LongPositionVector so
 //  std::cout<<"GeoBroadcast: RouteOutput at Node "<<(m_c2c->GetObject<Node> ())->GetId()<<std::endl;
   //---------------- check iTETRIS ----------------------------
 
+  struct c2cCommonHeader::geoAreaPos areapos = *(daddr->GetGeoAreaPos1 ());
+  
+
+
   //Geobroadcast extended header
   GeoABcastHeader bheader;
   bheader.SetLifeTime (lt);
   bheader.SetSeqNb(sn);
   bheader.SetSourPosVector (sourcePosVector);
-  bheader.SetGeoAreaPos1 (*(daddr->GetGeoAreaPos1 ()));
+  bheader.SetGeoAreaPos1 (areapos);
   if ((daddr->GetGeoAreaPos2 ()) != NULL)
   bheader.SetGeoAreaPos2 (*(daddr->GetGeoAreaPos2 ()));
   bheader.SetAreaSize (daddr->GetAreaSize ());
@@ -107,7 +111,13 @@ geoBroadcast::RouteOutput (Ptr<Packet> p, c2cCommonHeader::LongPositionVector so
   // the distance is computed from geographic coordinate in degree, then we use DistanceInMeters instead CartesianDistance
   //if (CartesianDistance (sourcePosVector.Lat, sourcePosVector.Long, daddr->GetGeoAreaPos1 ()->lat, daddr->GetGeoAreaPos1 ()->lon) < daddr->GetAreaSize())
   //{ 
-  if (DistanceInMeters (sourcePosVector.Lat, sourcePosVector.Long, daddr->GetGeoAreaPos1 ()->lat, daddr->GetGeoAreaPos1 ()->lon) < daddr->GetAreaSize())
+  
+  double distance = DistanceInMeters (sourcePosVector.Lat, sourcePosVector.Long, areapos.lat, areapos.lon);
+
+  // Area is in square meter, to compare with 
+  // a distance, we compute the radius
+  double radius = sqrt(((double)daddr->GetAreaSize() / M_PI));
+  if (distance < radius)
   {
     //---------------- check iTETRIS ----------------------------
  //   std::cout<<"GeoBroadcast RouteOutput at Node "<< m_c2c->GetObject<Node> ()->GetId ()<<" is in the destination area "<<std::endl;
