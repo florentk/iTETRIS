@@ -2537,6 +2537,14 @@ SyncManager::ScheduleV2xGeobroadcastMessages(
             ITetrisNode& senderReference = *senderNode;
             const type_info& typeinfoSender = typeid(senderReference);
 
+            /////////////////////////////////////////////////////
+            // NOTE by Florent KAISSER 08/21/2016
+            //
+            // Here, the area is convert to a circle !!
+            // Then, the geobroadcast doesn't work with 
+            // a other type of shape, all area is a circle.
+            //
+            /////////////////////////////////////////////////////
             CircularGeoAddress destination;
             Area2D* area2D = m_facilitiesManager->getWholeArea(areas);
             Circle circle = m_facilitiesManager->getCircleFromArea(area2D);
@@ -2545,8 +2553,19 @@ SyncManager::ScheduleV2xGeobroadcastMessages(
             double y = (double)circle.getCenter().y();
 
             vector <double> degreesCoordinates = LocToGeoConvert(x,y, 0, m_facilitiesManager->getLat0(), m_facilitiesManager->getLon0(), m_facilitiesManager->getAlt0());
-            destination.lat = degreesCoordinates.at(0);
-            destination.lon = degreesCoordinates.at(1);
+            
+            /////////////////////////////////////////////////////
+            // MODIFICATION by Florent KAISSER 08/24/2016
+            //        
+            // degreesCoordinates is a vector of double but
+            // destination.lat and destination.lon are int32.
+            // BIG ISSUE ! The double multiplied by 10000000 
+            // like in ns-3 source itetris-pos-helper.cc
+            //   
+            //destination.lat = degreesCoordinates.at(0);
+            //destination.lon = degreesCoordinates.at(1);
+            destination.lat = (uint32_t)(degreesCoordinates.at(0) * 10000000.0);
+            destination.lon = (uint32_t)(degreesCoordinates.at(1) * 10000000.0);            
             destination.areaSize = (uint32_t)circle.getArea();
 
             if (sender == 0) {

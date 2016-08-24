@@ -369,6 +369,8 @@ TraCIClient::CommandSlowDown(const ITetrisNode &node, float speed, int duration)
     tmpMsg.writeUnsignedByte(CMD_SET_VEHICLE_VARIABLE);// command id
     tmpMsg.writeUnsignedByte(CMD_SLOWDOWN);// variable id
     tmpMsg.writeString(node.m_tsId);// object id
+    tmpMsg.writeUnsignedByte(TYPE_COMPOUND); //data type   
+    tmpMsg.writeInt(2);// 2 values    
     tmpMsg.writeUnsignedByte(TYPE_DOUBLE); //data type
     tmpMsg.writeDouble((double)speed);// value
     tmpMsg.writeUnsignedByte(TYPE_INTEGER); //data type
