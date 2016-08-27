@@ -257,11 +257,16 @@ geoBroadcast::RouteInput (Ptr<const Packet> p, const c2cCommonHeader &header,
    //  std::cout<<"distance= "<<distanceReceiver<<std::endl;
      if (distanceReceiver <= radius)
      {
+      //node is in the destination area
+      
       //---------------- check iTETRIS ----------------------------
- //     std::cout<<"GeoBroadcast RouteInput: Node "<< m_c2c->GetObject<Node> ()->GetId ()<<" is in the destination area "<<std::endl;
+      //std::cout<<"GeoBroadcast RouteInput: Node "<< m_c2c->GetObject<Node> ()->GetId ()<<" is in the destination area "<<std::endl;
       //---------------- check iTETRIS ----------------------------
       //Local deliver
       lcb (packetlcb, header, saddr, daddr, iif);
+      
+      std::cout<<"GeoBroadcast RouteInput: Forward "<< m_posvector.gnAddr <<" seq : " << bheader.GetSeqNb()  <<std::endl;
+      //FORWARD packet !
       result.route->SetGateway (daddr);
       ucb (result, header);
       return true;
@@ -269,6 +274,8 @@ geoBroadcast::RouteInput (Ptr<const Packet> p, const c2cCommonHeader &header,
 
      else
      {
+      //node is not in the destination area
+      
       //---------------- check iTETRIS ----------------------------
 //      std::cout<<"GeoBroadcast RouteInput: Node "<< m_c2c->GetObject<Node> ()->GetId ()<<" is NOT in the destination area "<<std::endl;
       //---------------- check iTETRIS ----------------------------
@@ -278,10 +285,12 @@ geoBroadcast::RouteInput (Ptr<const Packet> p, const c2cCommonHeader &header,
 
      if (distanceLastF <= radius)
      {
+        //node is not in the destination area but coming from a forwarder located inside the destination area
         //---------------- check iTETRIS ----------------------------
 //        std::cout<<"GeoBroadcast RouteInput: Discard message "<<std::endl;
         //---------------- check iTETRIS ----------------------------
-        //drop packet coming from a forwarder located inside the destination area
+       
+        //DROP packet !
         return false;
      }
      else
@@ -291,10 +300,13 @@ geoBroadcast::RouteInput (Ptr<const Packet> p, const c2cCommonHeader &header,
        double distanceM = DistanceInMeters (vector.Lat, vector.Long, areapos.lat, areapos.lon);
        if (distanceM < distanceLastF)
        {
+         //the closest node decrease the distance to the area destination
          if (vector.gnAddr != m_c2c->GetObject<Node> ()->GetId())
          {
             Ptr<c2cAddress> gw = CreateObject<c2cAddress> ();
             gw->Set  (vector.gnAddr, vector.Lat, vector.Long);
+            
+            //FORWARD packet !
             result.route->SetGateway (gw);
 
              //---------------- check iTETRIS ----------------------------
@@ -306,12 +318,16 @@ geoBroadcast::RouteInput (Ptr<const Packet> p, const c2cCommonHeader &header,
          }
          else
          {
+          // the closest node is me !
+          //DROP packet !
 //            store (p);
            return false;
          }
        }
        else
        {
+          // the closest node does not decrease the distance to the area destination
+          //DROP packet !
 //          store (p);
          return false;
        }
@@ -320,7 +336,7 @@ geoBroadcast::RouteInput (Ptr<const Packet> p, const c2cCommonHeader &header,
   }
   else
 	//  std::cout<<"Packet Processed Before"<<std::endl; //vineet
-  return false; //Packet processed before
+  return false; //Packet processed before -> DROP packet !
 }
 
 /*

@@ -92,6 +92,20 @@ public:
     */
     virtual int CommandSlowDown(const ITetrisNode &node, float speed, int duration) = 0;    
 
+
+    /**
+    * @author Florent KAISSER
+    * @date 08/27/2016
+    * @brief Sends a message to SUMO in order to changes the color 
+    * @param[in,out] &node The node to slow down.
+    * @param[in] red,green,blue,alpha the color
+    * @return EXIT_SUCCESS if the color is changed, EXIT_FAILURE otherwise.
+    */    
+    virtual int CommandSetColor(const ITetrisNode &node, unsigned char red, unsigned char green, unsigned char blue, unsigned char alpha) = 0;
+
+
+
+
     /**
     * @brief Gets the speed of certain station from SUMO.
     * @param[in,out] &node The node to get information from.

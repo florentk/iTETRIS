@@ -148,9 +148,15 @@ bool SubsAppCmdTraffSim::push(SyncManager* syncManager)
 
         ics_types::stationID_t m_iCS_ID = m_msg.readInt();
         ITetrisNode *node = syncManager->GetNodeByIcsId(m_iCS_ID);
+        float speed = m_msg.readFloat();
 
-        syncManager->m_trafficSimCommunicator->CommandSetMaximumSpeed(*node, m_msg.readFloat());
+        syncManager->m_trafficSimCommunicator->CommandSetMaximumSpeed(*node, speed);
 
+        // ADDED by Florent KAISSER, 08/27/2016
+        if (speed > -1)
+          syncManager->m_trafficSimCommunicator->CommandSetColor(*node, 0xFF, 0x00, 0x00, 0x00);
+        else
+          syncManager->m_trafficSimCommunicator->CommandSetColor(*node, 0x00, 0xFF, 0x00, 0x00);        
         break;
     }
     
@@ -165,6 +171,12 @@ bool SubsAppCmdTraffSim::push(SyncManager* syncManager)
         int duration = m_msg.readInt();
     
         syncManager->m_trafficSimCommunicator->CommandSlowDown(*node, speed, duration);
+        
+        // ADDED by Florent KAISSER, 08/27/2016
+        if (speed > -1)
+          syncManager->m_trafficSimCommunicator->CommandSetColor(*node, 0xFF, 0x00, 0x00, 0x00);
+        else
+          syncManager->m_trafficSimCommunicator->CommandSetColor(*node, 0x00, 0xFF, 0x00, 0x00);            
         break;
     }
     ////////////////////////////////////////////////////

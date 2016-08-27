@@ -311,6 +311,61 @@ TraCIClient::CommandClose()
 }
 
 
+
+////////////////////////////////////////////////
+// ADDED by Florent KAISSER, 08/27/2016
+int
+TraCIClient::CommandSetColor(const ITetrisNode &node, unsigned char red, unsigned char green, unsigned char blue, unsigned char alpha)
+{
+    if (m_socket == 0) {
+        cout << "iCS --> [ERROR] Socket is NULL" << endl;
+        return EXIT_FAILURE;
+    }
+
+
+    Storage outMsg, inMsg, tmpMsg;
+    tmpMsg.writeUnsignedByte(CMD_SET_VEHICLE_VARIABLE);// command id
+    tmpMsg.writeUnsignedByte(VAR_COLOR);// variable id
+    tmpMsg.writeString(node.m_tsId);// object id
+    
+    
+    tmpMsg.writeUnsignedByte(TYPE_COLOR); //data type
+    tmpMsg.writeUnsignedByte(red);
+    tmpMsg.writeUnsignedByte(green);
+    tmpMsg.writeUnsignedByte(blue);
+    tmpMsg.writeUnsignedByte(alpha);        
+    
+    outMsg.writeUnsignedByte(0); // command length -> extended
+    outMsg.writeInt(1 + 4 + tmpMsg.size());
+    outMsg.writeStorage(tmpMsg);
+
+    try {
+        m_socket->sendExact(outMsg);
+    } catch (SocketException e) {
+        cout << "iCS --> Error while sending command: " << e.what() << endl;
+        return EXIT_FAILURE;
+    }
+
+#ifdef LOG_ON
+    stringstream log;
+    log << "Set new color for node (SUMO ID): " << node.m_tsId;
+    IcsLog::LogLevel((log.str()).c_str(), kLogLevelInfo);
+#endif
+
+    // receive answer message
+    try {
+        m_socket->receiveExact(inMsg);
+    } catch (SocketException e) {
+        cout << "iCS --> #Error while receiving command: " << e.what() << endl;
+        return EXIT_FAILURE;
+    }
+
+    return EXIT_SUCCESS;
+}
+////////////////////////////////////////////////
+
+
+
 int
 TraCIClient::CommandSetMaximumSpeed(const ITetrisNode &node, float maxSpeed)
 {
