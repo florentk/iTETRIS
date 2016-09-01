@@ -7,12 +7,14 @@ install geographiclib
 cd iCS/libs/geographiclib-1.2
 ./configure
 make
+sudo make install
 
 install xerces-c-3.0.1 
 ----------------------
 cd iCS/libs/xerces-c-3.0.1
 ./configure
 make
+sudo make install
 
 install iCS
 -----------
