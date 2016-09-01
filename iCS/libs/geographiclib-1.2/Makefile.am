@@ -8,7 +8,7 @@ AUTOMAKE_OPTIONS = foreign
 
 ACLOCAL_AMFLAGS = -I m4
 
-SUBDIRS = src tools doc include
+SUBDIRS = src tools include
 
 EXTRA_DIST = AUTHORS 00README.txt COPYING NEWS INSTALL \
 			 Makefile.mk windows maxima doc 
@@ -23,15 +23,3 @@ dist-hook:
 		xargs rm -rf ; \
 	echo include Makefile.mk > $(distdir)/Makefile
 
-# Custom rules
-
-all-local: doc
-install-data-local: install-doc
-
-doc:
-	$(MAKE) -C doc doc
-
-install-doc:
-	$(MAKE) -C doc install-doc
-
-.PHONY: doc install-doc

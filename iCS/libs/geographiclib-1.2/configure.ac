@@ -58,6 +58,5 @@ Makefile
 src/Makefile
 include/Makefile
 tools/Makefile
-doc/Makefile
 ])
 AC_OUTPUT

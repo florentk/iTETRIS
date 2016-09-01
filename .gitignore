@@ -1,0 +1,14 @@
+Makefile*
+*.a
+*.o
+*.pyc
+config*
+.deps*
+*.cache
+*.m4
+stamp*
+depcomp
+missing
+install-sh
+compile
+libtool

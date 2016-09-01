@@ -8,7 +8,7 @@
 #define HAVE_ARPA_INET_H 1
 
 /* define if bool is a built-in type */
-#define HAVE_BOOL 
+#define HAVE_BOOL /**/
 
 /* Define to 1 if you have the `catclose' function. */
 #define HAVE_CATCLOSE 1
@@ -95,7 +95,7 @@
 #define HAVE_LOCALE_H 1
 
 /* define if the compiler implements L"widestring" */
-#define HAVE_LSTRING 
+#define HAVE_LSTRING /**/
 
 /* Define to 1 if you have the <machine/endian.h> header file. */
 /* #undef HAVE_MACHINE_ENDIAN_H */
@@ -122,7 +122,7 @@
 #define HAVE_MEMSET 1
 
 /* define if the compiler implements namespaces */
-#define HAVE_NAMESPACES 
+#define HAVE_NAMESPACES /**/
 
 /* Define to 1 if you have the <netdb.h> header file. */
 #define HAVE_NETDB_H 1
@@ -167,10 +167,10 @@
 #define HAVE_STDLIB_H 1
 
 /* define if the compiler supports ISO C++ standard library */
-#define HAVE_STD_LIBS 
+#define HAVE_STD_LIBS /**/
 
 /* define if the compiler supports the std namespace */
-#define HAVE_STD_NAMESPACE 
+#define HAVE_STD_NAMESPACE /**/
 
 /* Define to 1 if you have the `strcasecmp' function. */
 #define HAVE_STRCASECMP 1
@@ -265,8 +265,8 @@
 /* Define to 1 if the system has the type `_Bool'. */
 #define HAVE__BOOL 1
 
-/* Define to 1 if your C compiler doesn't accept -c and -o together. */
-/* #undef NO_MINUS_C_MINUS_O */
+/* Define to the sub-directory where libtool stores uninstalled libraries. */
+#define LT_OBJDIR ".libs/"
 
 /* Name of package */
 #define PACKAGE "xerces-c"
@@ -282,6 +282,9 @@
 
 /* Define to the one symbol short name of this package. */
 #define PACKAGE_TARNAME "xerces-c"
+
+/* Define to the home page for this package. */
+#define PACKAGE_URL ""
 
 /* Define to the version of this package. */
 #define PACKAGE_VERSION "3.0.1"
@@ -414,10 +417,10 @@
 /* #undef XERCES_USE_NETACCESSOR_CFURL */
 
 /* Define to use the CURL NetAccessor */
-/* #undef XERCES_USE_NETACCESSOR_CURL */
+#define XERCES_USE_NETACCESSOR_CURL 1
 
 /* Define to use the Sockets-based NetAccessor */
-#define XERCES_USE_NETACCESSOR_SOCKET 1
+/* #undef XERCES_USE_NETACCESSOR_SOCKET */
 
 /* Define to use the WinSock NetAccessor */
 /* #undef XERCES_USE_NETACCESSOR_WINSOCK */
