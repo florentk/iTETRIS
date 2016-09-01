@@ -1,0 +1,29 @@
+## -*- Mode: python; py-indent-offset: 4; indent-tabs-mode: nil; coding: utf-8; -*-
+
+def build(bld):
+    module = bld.create_ns3_module('facilities', ['core', 'simulator', 'node'])
+    module.source = [
+        'service-list.cc',
+        'service-management.cc',
+        'message-management.cc',
+        'iTETRISns3Facilities.cc',
+        'addressing-support.cc',
+        'local-comm-ch-selector.cc',
+        'MWFacilities.cc',
+        'mw-comm-ch-selector.cc',
+        'IPCIUFacilities.cc'
+        ]
+    headers = bld.new_task_gen('ns3header')
+    headers.module = 'facilities'
+    headers.source = [
+        'service-list.h',
+        'service-management.h',
+        'message-management.h',
+        'iTETRISns3Facilities.h',
+        'addressing-support.h',
+        'local-comm-ch-selector.h',
+        'MWFacilities.h',
+        'mw-comm-ch-selector.h',
+        'IPCIUFacilities.h'
+        ]
+

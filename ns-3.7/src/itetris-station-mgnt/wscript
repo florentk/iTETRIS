@@ -1,0 +1,42 @@
+## -*- Mode: python; py-indent-offset: 4; indent-tabs-mode: nil; coding: utf-8; -*-
+
+def build(bld):
+    module = bld.create_ns3_module('itetris-station-mgnt')
+    module.source = [   
+
+        'vehicle-sta-mgnt.cc',
+        'ip-base-sta-mgnt.cc',
+        'road-side-unit.cc',
+        'rsu-sta-mgnt.cc',
+        'ip-base-station.cc',
+	'vehicle-scan-mngr.cc',
+	'wifi-vehicle-scan-mngr.cc',
+	'umts-vehicle-scan-mngr.cc',
+	'umts-bs-mgnt.cc',
+	'wifi-bs-mgnt.cc',
+	'dvbh-vehicle-scan-mngr.cc',
+	'dvbh-bs-mgnt.cc',
+	'wimax-bs-mgnt.cc',
+	'wimax-vehicle-scan-mngr.cc',
+        ]
+
+    headers = bld.new_task_gen('ns3header')
+    headers.module = 'itetris-station-mgnt'
+    headers.source = [      
+
+        'vehicle-sta-mgnt.h',
+        'ip-base-sta-mgnt.h',
+        'road-side-unit.h',
+        'rsu-sta-mgnt.h',
+        'ip-base-station.h',
+	'vehicle-scan-mngr.h',
+	'wifi-vehicle-scan-mngr.h',
+	'umts-vehicle-scan-mngr.h',
+	'umts-bs-mgnt.h',
+	'dvbh-bs-mgnt.h',
+	'wifi-bs-mgnt.h',
+	'dvbh-vehicle-scan-mngr.h',
+        'wimax-bs-mgnt.h',
+	'wimax-vehicle-scan-mngr.h',
+        ]
+

@@ -1,0 +1,31 @@
+## -*- Mode: python; py-indent-offset: 4; indent-tabs-mode: nil; coding: utf-8; -*-
+
+
+##def configure(conf):
+##    conf.env['LIBPATH'] = '/homes/hrizi/geoLib/lib'
+##    conf.env['LIB_GEOGRAPHIC'] = 'Geographic'
+##def configure(conf):
+##    conf.env['CXXFLAGS_GEOGRAPHIC'] = '-O3'
+##    conf.env['LIBPATH_GEOGRAPHIC']  = '/homes/hrizi/geoLib/lib'
+##    conf.env['LIB_GEOGRAPHIC']      = 'Geographic'
+
+
+##def build(bld):
+##    obj = bld.new_task_gen(features='cpp program', source='geo-utils.cc', uselib='GEOGRAPHIC')
+##    obj.includes = '. /homes/hrizi/geoLib/include/'
+
+def build(bld):
+    obj = bld.create_ns3_module('utils')
+#    obj.includes = '/homes/hrizi/ns3/ns-allinone-3.5/ns-3.5/src/geoLib'
+##    obj.include = '/homes/hrizi/geoLib/include/'
+##    obj.cxxflags = '-O3'
+##    obj.libpath = '/homes/hrizi/geoLib/lib'
+##    obj.lib  = 'Geographic'
+    obj.source = [
+        'geo-utils.cc',
+        ]
+    headers = bld.new_task_gen('ns3header')
+    headers.module = 'utils'
+    headers.source = [
+        'geo-utils.h',
+        ]

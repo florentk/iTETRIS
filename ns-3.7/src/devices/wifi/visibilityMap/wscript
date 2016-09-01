@@ -1,0 +1,28 @@
+## -*- Mode: python; py-indent-offset: 4; indent-tabs-mode: nil; coding: utf-8; -*-
+
+def build(bld):
+    obj = bld.create_ns3_module('visibilityMap')
+    obj.source = [
+        'readVisibilityMap.cc',
+        'roadElements.cc',
+        'roadElementPoints.cc',
+        'initPoints.cc',
+        'endEdges.cc',
+        'endPoints.cc',
+        'losPoint.cc',
+        'visibilityMap.cc'
+       ]
+
+    headers = bld.new_task_gen('ns3header')
+    headers.module = 'visibilityMap'
+    headers.source = [
+        'readVisibilityMap.h',
+        'roadElements.h',
+        'roadElementPoints.h',
+        'initPoints.h',
+        'endEdges.h',
+        'endPoints.h',
+        'losPoint.h',
+        'visibilityMap.h'
+       ]
+

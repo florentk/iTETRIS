@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<ns3Configuration>
+  <randomGenerators>
+      <randomGenerator seed="1" runNumber="1" />
+  </randomGenerators>
+  <installers>
+      <installer type="ns3::WaveVehicleInstaller" name="WaveVehicle" file="confWaveVehicle-pasubio-joined.xml" default="false" />    
+      <installer type="ns3::WaveRsuInstaller" name="WaveRsu" file="confWaveRsu.xml" relatedInstaller="WaveVehicle" default="false" />
+      <installer type="ns3::WifiVehicleInstaller" name="WifiVehicle" file="confWifi.xml" default="false" />
+      <installer type="ns3::UmtsBsInstaller" name="UmtsBs" file="confUmtsBs.xml" default="false" />
+      <installer type="ns3::DvbhVehicleInstaller" name="DvbhVehicle" file="confDvbhVehicle.xml" default="false" /> 
+      <installer type="ns3::DvbhBsInstaller" name="DvbhBs" file="confDvbhBs.xml" default="false" />
+      <installer type="ns3::UmtsVehicleInstaller" name="UmtsVehicle" file="confUmtsVehicle.xml" default="false" />
+      <installer type="ns3::WifiBsInstaller" name="WifiBs" default="false" />
+      <installer type="ns3::ItetrisNetworkTransportInstaller" name="NetTrans" default="true" />
+      <installer type="ns3::MobilityModelInstaller" name="Mobility" default="true" />
+  </installers>
+</ns3Configuration>

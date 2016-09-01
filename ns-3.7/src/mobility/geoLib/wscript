@@ -1,0 +1,44 @@
+## -*- Mode: python; py-indent-offset: 4; indent-tabs-mode: nil; coding: utf-8; -*-
+
+
+def build(bld):
+    obj = bld.create_ns3_module('geoLib')
+
+    obj.source = [
+        'AzimuthalEquidistant.cpp',
+        'CassiniSoldner.cpp',
+        'DMS.cpp',
+        'EllipticFunction.cpp',
+        'Geocentric.cpp',
+        'GeoCoords.cpp',
+        'Geodesic.cpp',
+        'Geoid.cpp',
+        'LambertConformalConic.cpp',
+        'LocalCartesian.cpp',
+        'MGRS.cpp',
+        'PolarStereographic.cpp',
+        'TransverseMercator.cpp',
+        'TransverseMercatorExact.cpp',
+        'UTMUPS.cpp',
+        ]
+    headers = bld.new_task_gen('ns3header')
+    headers.module = 'geoLib'
+    headers.source = [
+        'AzimuthalEquidistant.hpp',
+        'CassiniSoldner.hpp',
+        'DMS.hpp',
+        'EllipticFunction.hpp',
+        'Geocentric.hpp',
+        'GeoCoords.hpp',
+        'Geodesic.hpp',
+        'Geoid.hpp',
+        'LambertConformalConic.hpp',
+        'LocalCartesian.hpp',
+        'MGRS.hpp',
+        'PolarStereographic.hpp',
+        'TransverseMercator.hpp',
+        'TransverseMercatorExact.hpp',
+        'UTMUPS.hpp',
+        'Constants.hpp',
+        ]
+ 

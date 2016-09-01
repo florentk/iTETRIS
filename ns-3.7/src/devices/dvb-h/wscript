@@ -1,0 +1,48 @@
+## -*- Mode: python; py-indent-offset: 4; indent-tabs-mode: nil; coding: utf-8; -*-
+
+def build(bld):
+    dvb_h = bld.create_ns3_module('dvb-h',['node'])
+    dvb_h.source = [
+	'dvbh-controlpacket.cc',
+	#'dvbh-netdevice-UserEquip.cc',
+	#'dvbh-netdevice-BaseStation.cc',
+	'dvbh-queue.cc',
+	'dvbh-manager-BaseStation.cc',
+	'dvbh-manager-UserEquip.cc',
+	'dvbh-link-layer-UserEquip.cc',
+	'dvbh-link-layer-BaseStation.cc',
+	'dvbh-phy-layer-BaseStation.cc',
+	'dvbh-phy-layer-UserEquip.cc',
+	'dvbh-channel.cc',
+	'dvbh-ofdm-layer.cc',
+	'mpe-header.cc',
+	'ts-header.cc',
+	'pes-header.cc',
+	'dvbh-tags.cc',
+	'dvbh-net-device.cc',
+	'dvbh-ip-per.cc',
+        ]
+
+    headers = bld.new_task_gen('ns3header')
+    headers.module = 'dvb-h'
+    headers.source = [
+	'dvbh-manager.h',
+	'dvbh-controlpacket.h',
+	'dvbh-queue.h',
+	'dvbh-link-layer-UserEquip.h',
+	'dvbh-link-layer-BaseStation.h',
+	'dvbh-phy-layer-BaseStation.h',
+	'dvbh-phy-layer-UserEquip.h',
+	'dvbh-ofdm-layer.h',
+	'dvbh-manager-BaseStation.h',
+	'dvbh-manager-UserEquip.h',
+	#'dvbh-netdevice-UserEquip.h',
+	#'dvbh-netdevice-BaseStation.h',
+	'dvbh-channel.h',
+	'mpe-header.h',
+	'ts-header.h',
+	'pes-header.h',
+	'dvbh-tags.h',
+	'dvbh-net-device.h',
+	'dvbh-ip-per.h',
+        ]

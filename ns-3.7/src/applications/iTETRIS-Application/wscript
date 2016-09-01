@@ -1,0 +1,13 @@
+## -*- Mode: python; py-indent-offset: 4; indent-tabs-mode: nil; coding: utf-8; -*-
+
+def build(bld):
+    module = bld.create_ns3_module('iTETRIS-Application', ['core', 'simulator', 'node'])
+    module.source = [
+        'iTETRIS-Application.cc',
+        ]
+    headers = bld.new_task_gen('ns3header')
+    headers.module = 'iTETRIS-Application'
+    headers.source = [
+        'iTETRIS-Application.h',
+        ]
+

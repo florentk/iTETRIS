@@ -1,0 +1,42 @@
+## -*- Mode: python; py-indent-offset: 4; indent-tabs-mode: nil; coding: utf-8; -*-
+
+def build(bld):
+    obj = bld.create_ns3_module('winner-models')
+    obj.source = [
+        'winner-loss-model.cc',
+        'winner-b1-loss-model.cc',
+        'winner-d1-loss-model.cc',
+        'winner-c2-loss-model.cc',
+        'visibility-model.cc',
+        'visibility-map-model.cc',
+        'building-map-model.cc',
+        'visibility-prob-d1.cc',
+        'visibility-prob-b1.cc',
+        'visibility-prob-c2.cc',
+        'shadowing-model.cc',
+        'spline.cc',
+        'shadowing-spline.cc',
+        'fading-model.cc',
+        'cheng-loss-model.cc',
+       ]
+
+    headers = bld.new_task_gen('ns3header')
+    headers.module = 'winner-models'
+    headers.source = [
+        'winner-loss-model.h',
+        'winner-b1-loss-model.h',
+        'winner-d1-loss-model.h',
+        'winner-c2-loss-model.h',
+        'visibility-model.h',
+        'visibility-map-model.h',
+        'building-map-model.h',
+        'visibility-prob-d1.h',
+        'visibility-prob-b1.h',
+        'visibility-prob-c2.h',
+        'shadowing-model.h',
+        'spline.h',
+        'shadowing-spline.h',
+        'fading-model.h',
+        'cheng-loss-model.h',
+       ]
+

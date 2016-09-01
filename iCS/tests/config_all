@@ -1,0 +1,5 @@
+home_operating_system:posix
+
+[run_dependent_text]
+output:Version
+

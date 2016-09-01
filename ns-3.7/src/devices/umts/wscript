@@ -1,0 +1,56 @@
+## -*- Mode: python; py-indent-offset: 4; indent-tabs-mode: nil; coding: utf-8; -*-
+
+def build(bld):
+    umts = bld.create_ns3_module('umts')
+    umts.source = [        	
+
+	'umts-channel.cc',
+	'umts-queue.cc',
+	'controlpacket.cc',	
+	'umts-phy-layer-ue.cc',
+	'umts-phy-layer-bs.cc',
+	'ovsfTrees.cc',
+	'umts-mac-layer.cc',
+	'umts-ifq-layer.cc',
+	'umts-rlc-layer.cc',	
+	'umts-rrc-layer-bs.cc',
+	'umts-rrc-layer-ue.cc',
+	'blerTable.cc',
+	'umts-userequipment-manager.cc',
+	'umts-basestation-manager.cc',	
+	'cost231_model.cc',
+	'umts-mac-header.cc',
+	'umts-rlc-am-header.cc',
+	'umts-rlc-um-header.cc',
+	'umts-rlc-ack-header.cc',
+	'umts-tags.cc',
+	'umts-net-device.cc',	
+        ]
+
+    headers = bld.new_task_gen('ns3header')
+    headers.module = 'umts'
+    headers.source = [        
+	'umts-manager.h',	
+	'umts-channel.h',
+	'umts-queue.h',
+	'controlpacket.h',
+	'umts-rlc-layer.h',
+	'umts-mac-layer.h',
+	'umts-phy-layer-ue.h',
+	'umts-phy-layer-bs.h',
+	'ovsfTrees.h',
+	'umts-rrc-layer-bs.h',
+	'umts-rrc-layer-ue.h',
+	'umts-ifq-layer.h',
+	'blerTable.h',
+	'umts-userequipment-manager.h',
+	'umts-basestation-manager.h',	
+	'cost231_model.h',
+	'umts-mac-header.h',
+	'umts-rlc-am-header.h',
+	'umts-rlc-um-header.h',
+	'umts-rlc-ack-header.h',
+	'umts-tags.h',
+	'umts-net-device.h',	
+        ]
+

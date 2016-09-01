@@ -1,0 +1,80 @@
+## -*- Mode: python; py-indent-offset: 4; indent-tabs-mode: nil; coding: utf-8; -*-
+
+def configure(conf):
+    have_libxml2 = conf.pkg_check_modules('LIBXML2', 'libxml-2.0 >= 2.6', mandatory=False)
+    if have_libxml2:
+        conf.define('HAVE_LIBXML2', 1)
+
+    conf.env['ENABLE_LIBXML2'] = have_libxml2
+    conf.report_optional_feature("XmlIo", "XmlIo",
+                                 conf.env['ENABLE_LIBXML2'],
+                                 "library 'libxml-2.0 >= 2.7' not found")
+
+def build(bld):
+    module = bld.create_ns3_module('inci-utils')
+    module.source = [   
+
+        'wifi-installer.cc',
+        'wave-installer.cc',
+        'wifi-ip-installer.cc',
+        'comm-module-installer.cc',
+        'itetris-network-transport-installer.cc',
+        'mobility-model-installer.cc',
+        'iTETRISNodeManager.cc',
+        'packet-manager.cc',
+        'inci-packet.cc',
+        'inci-packet-list.cc',
+        'wave-vehicle-installer.cc',
+        'wave-rsu-installer.cc',
+        'wifi-bs-installer.cc',
+        'wifi-vehicle-installer.cc',
+        'ip-interface-list.cc',
+	'umts-installer.cc',
+	'umts-bs-installer.cc',
+	'umts-vehicle-installer.cc',
+	'dvbh-installer.cc',
+	'dvbh-bs-installer.cc',
+	'dvbh-vehicle-installer.cc',
+	'tmc-installer.cc',
+	'wimax-installer.cc',
+	'wimax-bs-installer.cc',
+	'wimax-vehicle-installer.cc',
+        ]
+
+    headers = bld.new_task_gen('ns3header')
+    headers.module = 'inci-utils'
+    headers.source = [      
+
+        'wifi-installer.h',
+        'wifi-ip-installer.h',
+        'wave-installer.h',
+        'comm-module-installer.h',
+        'itetris-network-transport-installer.h',
+        'mobility-model-installer.h',
+        'iTETRISNodeManager.h',
+        'packet-manager.h',
+        'configuration-manager-xml.h',
+        'inci-packet.h',   
+        'inci-packet-list.h',
+        'wave-vehicle-installer.h',
+        'wave-rsu-installer.h',
+        'itetris-types.h',
+        'wifi-bs-installer.h',
+        'wifi-vehicle-installer.h',
+        'ip-interface-list.h',
+	'umts-installer.h',
+	'umts-bs-installer.h',
+	'umts-vehicle-installer.h',
+	'dvbh-installer.h',
+	'dvbh-bs-installer.h',
+	'dvbh-vehicle-installer.h',
+	'tmc-installer.h',
+	'wimax-installer.h',
+	'wimax-bs-installer.h',
+	'wimax-vehicle-installer.h',
+        ]
+
+    if bld.env['ENABLE_LIBXML2']:
+        module.source.append ('configuration-manager-xml.cc')
+        module.uselib = 'LIBXML2'
+

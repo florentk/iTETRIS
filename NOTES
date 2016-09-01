@@ -1,0 +1,212 @@
+Développement
+-------------
+
+Objectif : crée un framework de simulation basé sur iTetris pour la simulation d'application v2x dans différents contexts métorologiques.
+
+pourquoi iTetris :
+PRO : possibilité de faire des simulations bi-directionnel entre ns-3 et SUMO, ce qui permet d'adapter le comportement des véhicules dans SUMO en fonction des messages reçu via le réseau sans-fil.
+CONS : utilisation de l'ancienne implémentation de 802.11p. 
+
+Évolution : faire fonctionner SUMO en bi-directionnel avec la dernière version de ns-3.
+
+L'application iTetris communique avec le simulateur de réseau et de traffic à l'aide des Subscriptions demandé à l'iCS (iTetris Control System).
+
+Etapes :
+Définir les Subscriptions et les Result Container nécessaires on fonctionnement de l'application.
+Application spécifique au fog en plus de l'application à simuler ??
+
+
+Analyse rapport
+---------------
+
+
+Au niveau purement réseau, donc concernant NS-3, il y aura deux grands
+types de protocoles :
+
+1. Diffusion d'un message d'avertissement (de brouillard ou de bouchon)
+dans une zone donnée par les véhicules et les RSU.
+2. Alerte d'un danger imminent pour un véhicule :  distance de sécurité
+insuffisante, changement de voie d'un véhicule venant en face.
+
+Pour évaluer le premier protocole, il faut déterminer le pourcentage de
+véhicules qui a reçu l'information dans la zone ciblée en fonction de la
+densité de véhicule et de RSU
+
+Pour le second, c'est le délais de transmission pour avertir le véhicule
+qui compte.
+
+Ces cas ont sans doute déjà été étudiés, faudrait faire une biblio. Mais
+on peut refaire les simulations dans le contexte de Dubaï.
+
+Après vient la parti simulation qui concerne le comportement des
+conducteurs. C'est donc SUMO qui est ici concerné. 
+
+1. Adapter la vitesse dun véhicule qui à reçu un message d'avertissement ou d'alerte
+2. Evaluer les protocole à l'aide du Time To Colission de chaque véhicule à partir des traces SUMO
+
+
+TODO
+----
+
+Faire une simulation avec WAVE et trace SUMO
+
+Inclure le code dans ns-3 pour la simulation simultané avec sumo :
+- voir comment ns-3 actuel prévoit de communiquer avec l'exterieur.
+- pas simultané mais utilisation de sumo et Google map : https://bitbucket.org/TiagoCerqueira/routesmobilitymodel
+
+
+Inclure le code dans ns-3 d'application/routage ou autre de iTETRIS utile à notre application
+Fixer le framework
+Développer notre application
+Simulation finale
+
+Standards ITS/DSRC
+------------------
+
+WAVE : US standard including SAE J2735 [5] for application layer and IEEE 1609/IEEE 802.11p for transport, network, link and physic layer. [3]
+
+ETSI ITS : European standards using IEEE 802.11p + IEEE 1609.4 for link and physic layer, and their own  transport et network layer with geographical routing support [2]. ETSI recommends using two transceivers for independently CCH and SCH channels whitout need switching [4]. 
+
+Both support TCP/IP.
+
+Implementations in ns-3
+-----------------------
+
+NS-3 is a universal network simulator and open-source written in C++ designed for high modularity to supporting her evolution. Thus, several ITS protocols are supported in ns-3 : 
+
+- WAVE : IEEE 802.11p + IEEE 1609.4 [1], 
+- ETSI ITS G5A : based on IEEE 802.11p [2],
+- and UMTS, LTE, DVB-H, WiMAX [2] 
+
+Implementation of WAVE and ETSI were made independently, then, a priori, two implementations of IEEE 802.11p in ns-3, one for WAVE in the main branch [7] and one for ETSI not include in main branch but maintained in iTETRIS by ns-3.7 (2010) [6].
+
+SUMO [8] is the reference for  the micro-simulation of vehicle mobility. To interact with a network simulator like ns-3, two possiblities : 
+- Run SUMO and get the trace of moving vehicle. Using this trace in input of ns-3 to define the nodes mobility. Drawback : The ITS applications does not interfere on vehicles moving. This is a classical method using by numerous work.
+- SUMO control the simulation progress of ns-3. For each simulation step, SUMO and ns-3 progress simultaneously. Using in ETSI ITS implementation in iTETRIS via iCS (iTetris Control Sytem) middleware [4]. Thus, ns-3 can act on SUMO to modify the vehicles behavior.
+
+Discussions
+-----------
+
+Being older, WAVE is more documented with further publications. On the other side ETSI standard va plus loins que WAVE is bettr with geographical routing support and allow using two IEEE 802.11p transceivers. It also allows the use of other communication standards such as LTE et WiMAX (4G), UMTS (3G), DVB-H ...
+
+Both are implemented in ns-3. WAVE is in main branch, while iTETRIS is based on ns-3.7 (although there is the potential for adjustments with ns-3.18 [9]). The question is which of the two 802.11p implements is the best  ?
+
+Code of iTetris deprecated to replace by Wave code : https://www.nsnam.org/wiki/index.php/GSOC2013WAVE_MAC
+
+
+Questions :
+- iTetris sera t'il intégré dans ns-3 ? Si pas de raison technique, puis-je le faire ? 
+- Y-a t'il un autre projet de toolkit qui integre la dernière version de ns-3 avec SUMO ?
+
+demandé à iTetris support, aux auteurs du model WAVE et au projet Colombo et MOTO 
+
+
+[1] Junling Bu and al., Implementation and Evaluation of WAVE 1609.4/802.11p in ns-3, WN3 2014
+[2] Michele Rondinone and al., iTetris: A modular simulation platform for the large scale evaluation of cooperative ITS applications, Simulation Modeling Practice and Theory, 2013
+[3] John B. Kenney, Didicated Short-Range Communication (DSRC) Standards in The United States, Proceedings of the IEEE, Invited Paper, 2011
+[4] ETSI, “Intelligent transport systems (its); harmonized channel specifications for intelligent transport systems operating in the 5 ghz frequency band,” 2012. 
+[5] DSRC Implementation Guide, A guide to users of SAE J2735 message sets over DSRC, SAE Internationnal.
+[6] The itetris platform. http://www.ict-itetris.eu/10-10-10-community/
+[7] WAVE models. https://www.nsnam.org/docs/models/html/wave.html
+[8] SUMO – Simulation of Urban MObility http://www.dlr.de/ts/en/desktopdefault.aspx/tabid-9883/16931_read-41000/
+[9] Daniele Azzarelli and al., Mobile Opportunistic Traffic Offloading (MOTO) D5.1.2 Description and development of MOTO simulation tool environment, INTECS, 2014.
+
+DSRC
+----
+
+constructeur : http://www.unex.com.tw/v2x
+
+DSRCImplementationGuide, SAE International p30
+2.7 Interaction with Other Wireless Protocols
+5.9 GHz DSRC is a secure wireless interface used to support VII applications. It provides a high
+speed, short range wireless interface between vehicles and surface transportation infrastructure. It
+enables the rapid communication of vehicle data and other content between OBUs (or mobile
+users) and RSUs. It supports both inter-vehicle and vehicle to infrastructure communications, and
+operates in a licensed frequency band allocated by the Federal Communications Commission
+(FCC) and is based upon the WiFi standard IEEE 802.11. Specifically, 802.11p defines the DSRC
+Lower Layers and is known as Wireless Access in Vehicular Environments (WAVE). 
+
+
+802.11p
+-------
+
+BSM : Basic safety message
+
+
+
+Admin
+-----
+
+Contrat Mémorandum d'entente (MoU) : https://fr.wikipedia.org/wiki/M%C3%A9morandum_d%27entente
+
+
+ETSI ITS
+--------
+
+ITS-G5A Frequency band ranging from 5,875 GHz to 5,905 GHz
+NOTE:Dedicated to ITS for safety related applications.
+ITS-G5B Frequency band ranging from 5,855 GHz to 5,875 GHz
+NOTE: Dedicated to ITS non-safety applications.
+ITS-G5C Frequency band ranging from 5,470 GHz to 5,725 GHz
+NOTE:Used for ITS applications.
+
+
+
+
+
+
+
+projet utilisant ns-3
+---------------------
+
+http://colombo-fp7.eu/
+https://www.nsnam.org/docs/models/html/wave.html
+
+-------------------------------------
+installation iTetris ubuntu 15.10 x64
+-------------------------------------
+
+Application du patch : patch -p0  < iTETRIS-ns3.patch
+
+iCS
+---
+
+ajout de LDFLAGS='-pthread' pour ./configure :
+
+	sudo ./configure --enable-sumo --enable-ns3 --enable-applications  --enable-log  --enable-debug --with-geographic-libraries=/usr/local/lib --with-geographic-includes=/usr/local/include/GeographicLib --with-xerces-libraries=/usr/local/lib --with-xerces-includes=/usr/local/include/xercesc LDFLAGS='-pthread' 
+
+ajout de "#include <unistd.h>" dans
+- src/ics/wirelesscom_sim_communicator/socket-ns3.cpp
+- src/foreign/tcpip/socket.cpp
+
+compilation ns3-7
+-----------------
+
+Aller dans le sous repertoire  ns3-7 
+
+ajout de "#include <unistd.h>" dans 
+- src/core/unix-system-wall-clock-ms.cc
+- src/devices/emu/emu-encode-decode.cc
+- src/devices/emu/emu-net-device.cc
+- src/devices/tap-bridge/tap-encode-decode.cc
+- src/devices/tap-bridge/tap-bridge.cc
+- src/helper/animation-interface.cc
+- src/inci/tcpip/server-socket.cc
+
+dans wscript ajout de :  env.append_value('CXXFLAGS', '-w')
+
+sudo ./waf -d optimized --disable-examples  --disable-python configure
+
+
+installation de SUMO
+--------------------
+sudo aptitude install libgdal1-dev proj libfox-1.6-dev libgl1-mesa-dev libglu1-mesa-dev libproj-dev
+editer configure.ac : LIB_XERCES="xerces-c-3.0"
+autoreconf --force --install
+sudo ./configure --with-xerces-libraries=/usr/local/lib --with-xerces-includes=/usr/local/include/xercesc
+sudo make
+sudo checkinstall 
+
+
+
+Exemple : refaire fichier avec netconvert !

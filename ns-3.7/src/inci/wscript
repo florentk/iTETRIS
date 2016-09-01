@@ -1,0 +1,16 @@
+## -*- Mode: python; py-indent-offset: 4; indent-tabs-mode: nil; coding: utf-8; -*-
+
+def build(bld):
+    module = bld.create_ns3_module('inci', ['tcpip'])
+    module.source = [        
+        'ns3-server.cc',                
+        'ns3-commands.cc',
+        ]
+    headers = bld.new_task_gen('ns3header')
+    headers.module = 'inci'
+    headers.source = [        
+        'ns3-server.h',
+	'ns3-commands.h',
+        'ns3-comm-constants.h',        
+        ]
+

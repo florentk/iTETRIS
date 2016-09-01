@@ -1,0 +1,42 @@
+
+                           iCS - iTETRIS Control System
+
+Build and Installation.
+=======================
+
+From the iCS folder, execute "make -f Makefile.cvs" in order to run the
+autoconf utilities creating configure and the Makefiles.
+
+A simple "./configure --with-geographic=/usr/local && make" should be enough for the distributions, if you
+have installed all needed libraries properly. This builds the iCS but the executable does
+not try the connection with ns-3, SUMO or the Applications. To make the iCS connect with
+the rest of the componets configure the build like this:
+
+	./configure --enable-sumo --enable-ns3 --enable-applications --with-geographic=/usr/local
+
+To run the iCS in debug fashion turn on the debug mode:
+
+	./configure --enable-sumo --enable-ns3 --enable-applications --enable-debug --with-geographic=/usr/local
+
+Also install the neede geographic libraries you will found in the lib folder. Unzip and follow the instructions to install.
+
+To enable logging featueres configure the project with --enable-loggin option. 
+The log file paths are defined in the iTETRIS master configuration file. The simulation crates
+very large configuration files and this option should only be activate for debuggin purposes.
+
+If configure does not find the libraries or includes needed, please check
+"./configure --help" for information on how to specify the paths needed.
+
+To install the iCS in the users bin folder run "sudo make install".
+
+Further installations instruction can be found iTETRIS-Installation-Guide.doc
+
+Example to define a configuration file for iTETRIS
+==================================================
+
+iCS -b 0 -e 10 -r 100 -m 5 -f /home/julen/itetris/iTETRIS/trunk/iCS/facilities-config-file.xml --traffic-executable "sumo -c" --traffic-host localhost --traffic-port 1984 --traffic-file /home/julen/itetris/iTETRIS/trunk/scenarios/a_costa_pasubio_joined/joined.sumo.cfg --communication-executable main-inci5 --communication-host localhost --communication-port 1982 --communication-general-params-file /home/julen/itetris/iTETRIS/trunk/ns-3/scratch/configGeneral.xml --communication-config-technologies-file /home/julen/itetris/iTETRIS/trunk/ns-3/scratch/configTechnologies.xml --ics-log-path /home/julen/ics-log.txt --ics-log-level "ERROR" --ics-log-time-size 200 --ns3-log-path /home/julen/ns3-log.txt --apps /home/julen/itetris/iTETRIS/trunk/iCS/application-config-file.xml --interactive --cooperative --save-configuration /home/julen/itetris/iTETRIS/trunk/iCS/itetris-config-file.xml
+
+How to use the config file
+==========================
+
+iCS -c itetris-config-file.xml

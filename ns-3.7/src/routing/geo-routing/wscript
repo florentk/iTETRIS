@@ -1,0 +1,31 @@
+## -*- Mode: python; py-indent-offset: 4; indent-tabs-mode: nil; coding: utf-8; -*-
+
+def build(bld):
+    module = bld.create_ns3_module('geo-routing', ['c2c-stack', 'contrib'])
+    module.includes = '.'
+    module.source = [
+	'geo-routing.cc',
+        'geo-broadcast.cc',
+        'geo-anycast.cc',
+        'geo-unicast.cc',
+        'topo-broadcast.cc',
+        'geoBroadAnycast-header.cc',
+        'geoUnicast-header.cc',
+        'topoBroadcast-header.cc',
+        'utils.cc',
+        ]
+
+    headers = bld.new_task_gen('ns3header')
+    headers.module = 'geo-routing'
+    headers.source = [
+	'geo-routing.h',
+        'geo-broadcast.h',
+        'geo-anycast.h',
+        'geo-unicast.h',
+        'topo-broadcast.h',
+        'geoBroadAnycast-header.h',
+        'geoUnicast-header.h',
+        'topoBroadcast-header.h',
+        'utils.h',
+        ]
+

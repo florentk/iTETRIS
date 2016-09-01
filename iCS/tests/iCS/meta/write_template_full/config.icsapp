@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+
+<configuration>
+
+    <scenario>
+        <begin value="0"/>
+        <end value=""/>
+        <penetration-rate value=""/>
+        <facilities-config-file value=""/>
+        <message-reception-window value=""/>
+        <interactive value="false"/>
+    </scenario>
+
+    <trafficsim>
+        <traffic-executable value=""/>
+        <traffic-file value=""/>
+        <traffic-host value="localhost"/>
+        <traffic-port value=""/>
+    </trafficsim>
+
+    <communicationsim>
+        <communication-executable value=""/>
+        <communication-host value="localhost"/>
+        <communication-port value=""/>
+        <communication-general-params-file value=""/>
+        <communication-config-technologies-file value=""/>
+    </communicationsim>
+
+    <applications>
+        <app-config-file value=""/>
+    </applications>
+
+    <logs>
+        <ics-log-path value=""/>
+        <ics-log-time-size value=""/>
+        <ics-log-level value=""/>
+        <ns3-log-path value=""/>
+    </logs>
+
+    <report>
+        <verbose value="false"/>
+        <print-options value="false"/>
+        <help value="false"/>
+        <suppress-warnings value="false"/>
+        <log-file value=""/>
+    </report>
+
+    <random_number>
+        <srand value="23423"/>
+        <abs-rand value="false"/>
+    </random_number>
+
+</configuration>

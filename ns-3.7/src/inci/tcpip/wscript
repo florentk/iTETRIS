@@ -1,0 +1,14 @@
+## -*- Mode: python; py-indent-offset: 4; indent-tabs-mode: nil; coding: utf-8; -*-
+
+def build(bld):
+    module = bld.create_ns3_module('tcpip')
+    module.source = [
+        'storage.cc',
+	'server-socket.cc',
+        ]
+    headers = bld.new_task_gen('ns3header')
+    headers.module = 'tcpip'
+    headers.source = [
+        'storage.h',
+	'server-socket.h',
+        ]

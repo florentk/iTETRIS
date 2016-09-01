@@ -1,0 +1,125 @@
+## -*- Mode: python; py-indent-offset: 4; indent-tabs-mode: nil; coding: utf-8; -*-
+import os
+import sys
+
+import Options
+import Logs
+import Utils
+import Task
+
+# Required NSC version
+NSC_RELEASE_NAME = "nsc-0.5.1"
+
+
+def set_options(opt):
+    opt.add_option('--with-nsc',
+                   help=('Use Network Simulation Cradle, given by the indicated path,'
+                         ' to allow the use of real-world network stacks'),
+                   default='', dest='with_nsc')
+
+
+def configure(conf):
+    conf.env['ENABLE_NSC'] = False
+
+    # checks for flex and bison, which is needed to build NSCs globaliser
+    # TODO: how to move these checks into the allinone scripts?
+    #def check_nsc_buildutils():
+    #    import flex
+    #    import bison
+    #    conf.check_tool('flex bison')
+    #    conf.check(lib='fl', mandatory=True)
+
+    # Check for the location of NSC
+    if Options.options.with_nsc:
+        if os.path.isdir(Options.options.with_nsc):
+            conf.check_message("NSC location", '', True, ("%s (given)" % Options.options.with_nsc))
+            conf.env['WITH_NSC'] = os.path.abspath(Options.options.with_nsc)
+    else:
+        nsc_dir = os.path.join('..', "nsc")
+        if os.path.isdir(nsc_dir):
+            conf.check_message("NSC location", '', True, ("%s (guessed)" % nsc_dir))
+            conf.env['WITH_NSC'] = os.path.abspath(nsc_dir)
+        del nsc_dir
+    if not conf.env['WITH_NSC']:
+        conf.check_message("NSC location", '', False)
+        conf.report_optional_feature("nsc", "Network Simulation Cradle", False,
+                                     "NSC not found (see option --with-nsc)")
+	return
+    
+    if sys.platform in ['linux2']:
+        arch = os.uname()[4]
+    else:
+        arch = None
+    ok = False
+    if arch == 'x86_64' or arch == 'i686' or arch == 'i586' or arch == 'i486' or arch == 'i386':
+        conf.env['NSC_ENABLED'] = 'yes'
+        conf.env.append_value('CXXDEFINES', 'NETWORK_SIMULATION_CRADLE')
+        conf.check(mandatory=True, lib='dl', define_name='HAVE_DL', uselib='DL')
+        ok = True
+    conf.check_message('NSC supported architecture', arch, ok)
+    conf.report_optional_feature("nsc", "Network Simulation Cradle", ok,
+                                 "architecture %r not supported" % arch)
+
+    # append the NSC kernel dirs to the module path so that these dirs
+    # will end up in the LD_LIBRARY_PATH, thus allowing the NSC NS-3
+    # module to find the necessary NSC shared libraries.
+    for nsc_module in ['linux-2.6.18', 'linux-2.6.26']:
+        conf.env.append_value('NS3_MODULE_PATH',
+                              os.path.abspath(os.path.join(conf.env['WITH_NSC'], nsc_module)))
+
+
+
+def build(bld):
+    obj = bld.create_ns3_module('c2c-stack', ['node'])
+    obj.source = [
+        'c2c-l3-protocol.cc',
+        'c2c-l4-protocol.cc',
+        'c2c-transport.cc',
+        'c2cl4T-socket-factory-impl.cc',
+        'c2cl4T-socket-impl.cc',
+        'c2c-end-point-demux.cc',
+        'c2c-end-point.cc',
+        'c2c-interface.cc',
+        'channel-tag.cc',
+        'mcs-tag.cc',
+        'tx-power-tag.cc',
+        'c2cTransport-header.cc',
+	'beaconing-protocol.cc',
+        'node-id-tag.cc',
+        'time-stamp-tag.cc',
+        'time-step-tag.cc',
+        'TStep-sequence-number-tag.cc',
+        'app-index-tag.cc',
+        ]
+
+    headers = bld.new_task_gen('ns3header')
+    headers.module = 'c2c-stack'
+    headers.source = [
+        'c2c-l3-protocol.h',
+        'c2c-l4-protocol.h',
+        'c2c-transport.h',
+        'c2cl4T-socket-factory-impl.h',
+        'c2cl4T-socket-impl.h',        
+        'c2c-end-point-demux.h',
+        'c2c-end-point.h',
+        'c2c-interface.h',
+        'channel-tag.h',
+        'mcs-tag.h',
+        'tx-power-tag.h',
+        'itetris-technologies.h', 
+        'c2cTransport-header.h',
+	'beaconing-protocol.h',
+        'node-id-tag.h',
+        'time-stamp-tag.h',
+        'time-step-tag.h',
+        'TStep-sequence-number-tag.h',
+        'app-index-tag.h',
+       ]
+
+    if bld.env['NSC_ENABLED']:
+        obj.source.append ('nsc-tcp-socket-impl.cc')
+        obj.source.append ('nsc-tcp-l4-protocol.cc')
+        obj.source.append ('nsc-tcp-socket-factory-impl.cc')
+        obj.source.append ('nsc-sysctl.cc')
+        headers.source.append('nsc-tcp-l4-protocol.h')
+        obj.uselib = 'DL'

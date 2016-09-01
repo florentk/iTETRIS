@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+
+<configuration>
+
+    <scenario>
+        <!-- Defines the begin time of the scenario simulation -->
+        <begin value="0"/>
+
+        <!-- Defines the end time of the scenario simulation -->
+        <end value=""/>
+
+        <!-- Defines the percentage of vehicles equiped with a RAT -->
+        <penetration-rate value=""/>
+
+        <!-- The entry point file for the facilities block configuration. -->
+        <facilities-config-file value=""/>
+
+        <!-- Defines the time the iCS will keep schedule messages in the internal tables. That time window past, they are erased. -->
+        <message-reception-window value=""/>
+
+        <!-- Whether iCS shall be run in interactive mode -->
+        <interactive value="false"/>
+
+    </scenario>
+
+    <trafficsim>
+        <!-- Defines the traffic simulation executable -->
+        <traffic-executable value=""/>
+
+        <!-- Defines the traffic simulation configuration -->
+        <traffic-file value=""/>
+
+        <!-- Defines the host the traffic simulation shall run on -->
+        <traffic-host value="localhost"/>
+
+        <!-- Defines the port the traffic simulation shall use -->
+        <traffic-port value=""/>
+
+    </trafficsim>
+
+    <communicationsim>
+        <!-- Defines the communication simulation executable -->
+        <communication-executable value=""/>
+
+        <!-- Defines the host the communication simulation shall run on -->
+        <communication-host value="localhost"/>
+
+        <!-- Defines the port the communication simulation shall use -->
+        <communication-port value=""/>
+
+        <!-- Defines the general ns-3 script configuration. -->
+        <communication-general-params-file value=""/>
+
+        <!-- Defines the communication technologies configuration in ns-3 -->
+        <communication-config-technologies-file value=""/>
+
+    </communicationsim>
+
+    <applications>
+        <!-- Defines the Application configurations -->
+        <app-config-file value=""/>
+
+    </applications>
+
+    <logs>
+        <!-- Defines the place where the iCS log file will be stored -->
+        <ics-log-path value=""/>
+
+        <!-- Defines the time step amount for each log file. -->
+        <ics-log-time-size value=""/>
+
+        <!-- Defines the output level of the log [ERROR, WARNING, INFO] -->
+        <ics-log-level value=""/>
+
+        <!-- Defines the place where the ns-3 log file will be stored -->
+        <ns3-log-path value=""/>
+
+    </logs>
+
+    <report>
+        <!-- Switches to verbose output -->
+        <verbose value="false"/>
+
+        <!-- Prints option values before processing -->
+        <print-options value="false"/>
+
+        <!-- Prints this screen -->
+        <help value="false"/>
+
+        <!-- Disables output of warnings -->
+        <suppress-warnings value="false"/>
+
+        <!-- Writes all messages to FILE -->
+        <log-file value=""/>
+
+    </report>
+
+    <random_number>
+        <!-- Initialises the random number generator with the given value -->
+        <srand value="23423"/>
+
+        <!-- Initialises the random number generator with the current system time -->
+        <abs-rand value="false"/>
+
+    </random_number>
+
+</configuration>
