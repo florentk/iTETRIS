@@ -1,0 +1,36 @@
+May 2016 : Version all-in-one to compile with Ubuntu 16.04
+----------------------------------------------------------
+- Based on iCS and ns-3 patch official release by iTetris project.
+- Delete all SVN directories. Remplace by Git version control system.
+- Add complete source of ns-3.7 and SUMO. Update ns-3 with iTetris patch.
+- Fix bugs in sources to compile with last version of C++.
+- Tests to compile with Ubuntu 16.04 LTE.
+
+May 2016 : Fix bugs
+-------------------
+- 05/25/16 iCS : check pointer not null
+- 05/25/16 ns-3 : check pointer not null
+
+Jun 2016 : Fix bug in iCS
+-------------------------
+- 06/06/2016 fix bug in Geobroadcast code : confusion betweend "message Id" and "application type Id"
+
+July 2016 : Add Slowdown command
+--------------------------------
+- 07/16/2016 add vehicle slowdown feature to iCS. This allow for an application to send VALUE_SLOW_DOWN command to Sumo. This command slowdown a vehicle to a new speed target but on a duration specified by the application. This is different of VALUE_SET_SPEED command which set a new speed target but quickly most possible.:q
+
+August 2016 : Fix geobroadcast routing bugs
+-------------------------------------------
+Routing geobroadcast message use geographical coordinate. In ns-3 many confusion between geographical and cardesian cordinates. Then,  geographical routing was no working.
+
+- Latitude and longitude are coded by 32bits integer. To convert float coordinate to integer, multiply latitude and longitude by 10000000. This conversion is not correctly apply in iCS : Bug fixed.
+- In ns-3, get geographical coordinate with GetLatitude and GetLongitude of ItetrisMobilityModel instead GetPosition of MobilityModel (cartesian position)
+- In ns-3, geographical routing code use DistanceInMeters methode to compute distance between nodes. This methode use geographical coordinate.
+- In iCS, the geographical routing system can be broadcast on many space : circle, oval, polygon ... But in ns-3, only circle can be used. For the moment, this bug is not fixed. Then, only circle geobroadcast can be use by applications.
+
+August 2016 : Add SetColor command
+-----------------------------------
+- 08/27/2016 add feature to change color of a vehicle in SUMO. For the moment, iCS change color in RED when vehicle break to a new target speed (with VALUE_SLOW_DOWN or VALUE_SET_SPEED) and in GREEN when speed is restored (set speed with -1 value).
+
+
+

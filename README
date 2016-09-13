@@ -1,1 +1,5 @@
+iTetris is a project to use ns-3 network simulator with SUMO vehicle mobility simulator via iCS system. iCS allow to connect Applications, ns-3 and SUMO.
+
 To install, see INSTALL file
+
+For developpe application for iTetris, see offical doc.
