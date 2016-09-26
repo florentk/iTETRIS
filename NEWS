@@ -17,7 +17,7 @@ Jun 2016 : Fix bug in iCS
 
 July 2016 : Add Slowdown command
 --------------------------------
-- 07/16/2016 add vehicle slowdown feature to iCS. This allow for an application to send VALUE_SLOW_DOWN command to Sumo. This command slowdown a vehicle to a new speed target but on a duration specified by the application. This is different of VALUE_SET_SPEED command which set a new speed target but quickly most possible.:q
+- 07/16/2016 add vehicle slowdown feature to iCS. This allow for an application to send VALUE_SLOW_DOWN command to Sumo. This command slowdown a vehicle to a new speed target but on a duration specified by the application. This is different of VALUE_SET_SPEED command which set a new speed target but quickly most possible.
 
 August 2016 : Fix geobroadcast routing bugs
 -------------------------------------------
