@@ -1,15 +1,17 @@
 May 2016 : Version all-in-one to compile with Ubuntu 16.04
 ----------------------------------------------------------
+iTetris doesn't compile with Ubuntu 16.04. Some modifications :
 - Based on iCS and ns-3 patch official release by iTetris project.
-- Delete all SVN directories. Remplace by Git version control system.
+- Delete all SVN directories. Remplace by Git control version system.
 - Add complete source of ns-3.7 and SUMO. Update ns-3 with iTetris patch.
 - Fix bugs in sources to compile with last version of C++.
 - Tests to compile with Ubuntu 16.04 LTE.
 
 May 2016 : Fix bugs
 -------------------
-- 05/25/16 iCS : check pointer not null
-- 05/25/16 ns-3 : check pointer not null
+Stack overflow while simulation :
+- 05/25/16 iCS : in ScheduleV2xGeobroadcastMessages method of sync-manager.cpp : check pointer not null
+- 05/25/16 ns-3 : in InitiateGeoBroadcastTxon method of iTETRISns3Facilities.cc file : check pointer not null 
 
 Jun 2016 : Fix bug in iCS
 -------------------------
