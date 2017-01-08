@@ -40,3 +40,165 @@ How to use the config file
 ==========================
 
 iCS -c itetris-config-file.xml
+
+Description of importants sources files
+=======================================
+
+ics/ : iCS source code
+	ics.cpp : initialise iCS form config files
+	sync-manager.cpp : manage communications with sumo and ns-3
+	FacilitiesManager.cpp : methodes to manage map and stations features
+
+ics/application_manager/ : Manage iTetris application
+	app-message-manger.cpp : Manages the data exchange with the applications through a predefined brief set of commands.
+	application-handler.cpp : Manages the execution of the applications.
+
+
+Application messages format
+===========================
+
+Request subscription in both side is send for each node (in cam area) and each step
+
+-------------------------------
+Request Subscription (ics->app)
+-------------------------------
+
+- command length (int)
+- command id (ubyte) : CMD_ASK_FOR_SUBSCRIPTION
+- simulation timestep (int) 
+- node identifier (int)
+
+-------------------------------
+Request Subscription (app->ics)
+-------------------------------
+
+This message is read N times until the command id is different of CMD_ASK_FOR_SUBSCRIPTION or result type is diffirent of APP_RTYPE_OK or subscription id is CMD_END_SUBSCRIPTION_REQUEST (or invalid).
+
+Header First Part 
+-----------------
+
+- command length for this part (ubyte) 
+- command id (ubyte) : CMD_ASK_FOR_SUBSCRIPTION
+- result type (ubyte) : APP_RTYPE_ERR, APP_RTYPE_NOTIMPLEMENTED or APP_RTYPE_OK
+- message (string) : A description of the actions taken by the Application
+
+Header Second Part
+------------------
+
+- command length for this part (ubyte)
+- command id (ubyte) : CMD_ASK_FOR_SUBSCRIPTION
+- subscription id (ubyte) : 
+	- SUB_RETURNS_CARS_IN_ZONE,
+	- SUB_SET_CAM_AREA,
+	- SUB_TRAVEL_TIME_ESTIMATION_START,
+	- SUB_TRAVEL_TIME_ESTIMATION_END,
+	- SUB_TRAVEL_TIME_ESTIMATION,
+	- SUB_RECEIVED_CAM_INFO,
+	- SUB_FACILITIES_INFORMATION,
+	- SUB_APP_MSG_SEND,
+	- SUB_APP_MSG_RECEIVE,
+	- SUB_APP_CMD_TRAFF_SIM,
+	- SUB_APP_RESULT_TRAFF_SIM,
+	- SUB_X_APPLICATION_DATA
+	- CMD_END_SUBSCRIPTION_REQUEST
+	(see p. 49 of guidelines for description)
+
+- payload (command length - 3), depend of subscription id : 
+	- SUB_RETURNS_CARS_IN_ZONE : Circle zone
+	- SUB_SET_CAM_AREA : Circle, frequency (float), infoType (ubyte)
+	- SUB_TRAVEL_TIME_ESTIMATION_START : status (obsolet) (ubyte), id of rsu (int), 4 x Point, frequency (float), msgRegenerationTime (float), msgLifeTime (int)
+	- SUB_TRAVEL_TIME_ESTIMATION_END :  status (obsolet) (ubyte), id of rsu (int), 4 x Point, frequency (float), msgRegenerationTime (float), msgLifeTime (int)
+	- SUB_TRAVEL_TIME_ESTIMATION : vehicle ID (int) (obsolet)
+	- SUB_RECEIVED_CAM_INFO : nothing
+	- SUB_FACILITIES_INFORMATION : number of block (int), (type (uchar) : TYPE_TOPO or TYPE_RECEIVED_CAM, number of field (ushort), (Topological or ReceivedCam Information) x number of field  ) x number of block
+	- SUB_APP_MSG_SEND : Application message (see below)
+	- SUB_APP_MSG_RECEIVE : Application message (see below)
+	- SUB_APP_CMD_TRAFF_SIM : Traffic Sim commande (see below)
+	- SUB_APP_RESULT_TRAFF_SIM : Traffic Sim Command Result (see below)
+	- SUB_X_APPLICATION_DATA : owned application data (not formated by iCS)
+	- CMD_END_SUBSCRIPTION_REQUEST : nothing
+
+
+Point : 
+	- X pos (float)
+	- Y pos (float)
+		
+Circle :
+	- Point
+	- Radius (float) 
+	
+Ellipse :
+	- Point A
+	- Point B
+	- eccentricity (float)
+
+Convex Polygon :
+	- number of points (ubyte)
+	- number of points x Point
+	
+Topological Information :
+	- X pos (float)
+	- Y pos (float)
+	- Speed (float)
+	- Direction (float)
+	- Acceleration (float)
+	- Lane ID (string)
+	- Edge ID (string)
+	- Junction ID (string)
+	
+ReceivedCam Information : no implemented
+
+Application message :
+	- HEADER__APP_MSG_TYPE (ubyte)
+	- HEADER__MSG_FLAG : 0 to 15  (ubyte)
+	- HEADER__PREF_TECHS (ubyte) (optionnal)
+	- HEADER__GEN_PROF (ubyte) (optionnal)
+	- HEADER__SOURCE_ID (ubyte) (optionnal)
+	- HEADER__LIFE_TIME (ubyte) (optionnal)
+	- HEADER__MSG_PAYLOAD_LENGTH (short)
+	- HEADER__MSG_SEQ_No (int)
+	- Communication mode (ubyte) : EXT_HEADER_TYPE_TOPOBROADCAST, EXT_HEADER_TYPE_UNICAST, EXT_HEADER_TYPE_MULTICAST, EXT_HEADER_TYPE_GEOBROADCAST, EXT_HEADER_TYPE_GEOUNICAST, EXT_HEADER_TYPE_GEOANYCAST
+	- Extra header, depend of communication mode :
+		- EXT_HEADER_TYPE_TOPOBROADCAST : flags (ubyte) (EXT_HEADER__VALUE_BLOCK_HOPS_No), number of hops
+		- EXT_HEADER_TYPE_UNICAST : flags (ubyte) (EXT_HEADER__VALUE_BLOCK_IDs), List of IDs
+		- EXT_HEADER_TYPE_MULTICAST (not implemented) : flags (ubyte) (EXT_HEADER__VALUE_BLOCK_IDs), List of IDs
+		- EXT_HEADER_TYPE_GEOBROADCAST : flags (ubyte) (EXT_HEADER__VALUE_BLOCK_AREAs), List of Areas
+		- EXT_HEADER_TYPE_GEOUNICAST (not implemented) : flags (ubyte) (EXT_HEADER__VALUE_BLOCK_IDs), List of IDs (only one ID is authorized), flags (ubyte) (EXT_HEADER__VALUE_BLOCK_AREAs), List of Areas
+		- EXT_HEADER_TYPE_GEOANYCAST (not implemented) : flags (ubyte) (EXT_HEADER__VALUE_BLOCK_AREAs), List of Areas			
+	
+	List of IDs : 
+		- number of destinations (uint),  
+		- (ID (int)) x number of IDs
+	
+	List of Areas :
+		- number of areas (uchar), 
+		- Area x number of areas	
+		
+	Area :
+		- area type (ubyte) one value of : 
+			- EXT_HEADER__CIRCLE (Circle), 
+			- EXT_HEADER__ELLIPSE (Ellipse), 
+			- EXT_HEADER__CONV_POLYGON (Convex Polygon), 
+			- EXT_HEADER__LANE_ID (String), 
+			- EXT_HEADER__EDGE_ID (String), 
+			- EXT_HEADER__JUNCTION_ID (String)), 
+		- area (see above)		
+		
+		
+Traffic Sim commande :
+	- HEADER__APP_MSG_TYPE (ubyte)
+	- Command mode (ubyte) : VALUE_SET_EDGE_TRAVELTIME, VALUE_RE_ROUTE, VALUE_SET_SPEED, VALUE_SLOW_DOWN
+	- Command, dépend of mode :
+		- VALUE_SET_EDGE_TRAVELTIME : station ID, number of weights (uint), number of weights x (TYPE_EDGE_ID (ubyte), Edge ID (string), TYPE_EDGE_TRAVELTIME (ubyte), weight (float))
+		- VALUE_RE_ROUTE : TYPE_STATION_ID (ubyte), number of station IDs (uint), number of station IDs x station ID (uint)
+		- VALUE_SET_SPEED : station ID (uint), new speed (float)
+		- VALUE_SLOW_DOWN : station ID (uint), new speed (float), duration of slow down (uint)
+
+Traffic Sim Command Result :
+	- HEADER__APP_MSG_TYPE (ubyte)
+	- Command mode (ubyte) : VALUE_GET_EDGE_TRAVELTIME or VALUE_GET_ROUTE_VARIABLE
+	- Command, depends of mode :
+		- VALUE_GET_EDGE_TRAVELTIME : station ID, number of weights (uint), number of weights x (Edge ID (string), TYPE_EDGE_TRAVELTIME (ubyte), weight (float))
+		- VALUE_GET_ROUTE_VARIABLE : station ID, number of route (uint), number of route x (TYPE_EDGES_ID_FROM_ROAD_ID (ubyte), Route ID (string))
+		
+
