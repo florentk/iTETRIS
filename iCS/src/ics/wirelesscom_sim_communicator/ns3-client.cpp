@@ -611,7 +611,11 @@ Ns3Client::CommandStartTopoTxon(std::vector<std::string> sendersId, std::string 
     int stringSize = CalculateStringListByteSize(sendersId);
     int stringSize2 = CalculateStringListByteSize(technologyList);
 
-    outMsg.writeInt(4 + 1 + stringSize + 4 + serviceId.length() + 1 + stringSize + 4 + 4 + 4 + 4 + 4); // Not sure if this works
+    ////////////////////////////////////////////
+    // MODIFIED BY Florent KAISSER 01/10/2017
+    // twice stringSize : seconde stringSize -> stringSize2
+    outMsg.writeInt(4 + 1 + stringSize + 4 + serviceId.length() + 1 + stringSize2 + 4 + 4 + 4 + 4 + 4); // Not sure if this works // FK : WTF !!
+    ////////////////////////////////////////////
     outMsg.writeUnsignedByte(CMD_START_TOPO_TXON);
     outMsg.writeStringList(sendersId);
     outMsg.writeString(serviceId);
@@ -744,8 +748,12 @@ Ns3Client::ReportResultState(StorageNs3& inMsg, int command)
 int
 Ns3Client::CalculateStringListByteSize(vector<string> list)
 {
+    ////////////////////////////////////////////
+    // MODIFIED BY Florent KAISSER 01/10/2017
+    // migth return 4 (to write size = 0)
     if (list.size() == 0)
-        return -1;
+        return 4;
+    ////////////////////////////////////////////        
 
     // 4 bytes for the length of the string list
     // 4 bytes for the length each member of the list
