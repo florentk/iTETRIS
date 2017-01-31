@@ -59,6 +59,17 @@ Application messages format
 
 Request subscription in both side is send for each node (in cam area) and each step
 
+------------------------------
+Report Result State (app->ics)
+------------------------------
+
+- command length for this report (ubyte) (4 + lenght of string)
+- command id (ubyte) : command id corresponding to the command sended, one value : 
+	- CMD_ASK_FOR_SUBSCRIPTION
+	- CMD_APP_CLOSE
+- result type (ubyte) : APP_RTYPE_ERR, APP_RTYPE_NOTIMPLEMENTED or APP_RTYPE_OK
+- message (string) : A description of the actions taken by the Application
+
 -------------------------------
 Request Subscription (ics->app)
 -------------------------------
@@ -74,18 +85,9 @@ Request Subscription (app->ics)
 
 This message is read N times until the command id is different of CMD_ASK_FOR_SUBSCRIPTION or result type is diffirent of APP_RTYPE_OK or subscription id is CMD_END_SUBSCRIPTION_REQUEST (or invalid).
 
-Header First Part 
------------------
 
-- command length for this part (ubyte) 
-- command id (ubyte) : CMD_ASK_FOR_SUBSCRIPTION
-- result type (ubyte) : APP_RTYPE_ERR, APP_RTYPE_NOTIMPLEMENTED or APP_RTYPE_OK
-- message (string) : A description of the actions taken by the Application
-
-Header Second Part
-------------------
-
-- command length for this part (ubyte)
+- Report Result State (see above)
+- command length (without Report Result State) (ubyte)
 - command id (ubyte) : CMD_ASK_FOR_SUBSCRIPTION
 - subscription id (ubyte) : 
 	- SUB_RETURNS_CARS_IN_ZONE,
@@ -103,7 +105,7 @@ Header Second Part
 	- CMD_END_SUBSCRIPTION_REQUEST
 	(see p. 49 of guidelines for description)
 
-- payload (command length - 3), depend of subscription id : 
+- payload (command length - 3), depend on subscription id : 
 	- SUB_RETURNS_CARS_IN_ZONE : Circle zone
 	- SUB_SET_CAM_AREA : Circle, frequency (float), infoType (ubyte)
 	- SUB_TRAVEL_TIME_ESTIMATION_START : status (obsolet) (ubyte), id of rsu (int), 4 x Point, frequency (float), msgRegenerationTime (float), msgLifeTime (int)
@@ -156,15 +158,15 @@ Application message :
 	- HEADER__SOURCE_ID (ubyte) (optionnal)
 	- HEADER__LIFE_TIME (ubyte) (optionnal)
 	- HEADER__MSG_PAYLOAD_LENGTH (short)
-	- HEADER__MSG_SEQ_No (int)
+	- HEADER__MSG_SEQ_No (int) (ONLY FOR MESSAGE SENDING)
 	- Communication mode (ubyte) : EXT_HEADER_TYPE_TOPOBROADCAST, EXT_HEADER_TYPE_UNICAST, EXT_HEADER_TYPE_MULTICAST, EXT_HEADER_TYPE_GEOBROADCAST, EXT_HEADER_TYPE_GEOUNICAST, EXT_HEADER_TYPE_GEOANYCAST
-	- Extra header, depend of communication mode :
-		- EXT_HEADER_TYPE_TOPOBROADCAST : flags (ubyte) (EXT_HEADER__VALUE_BLOCK_HOPS_No), number of hops
+	- Extra header, depend on communication mode :
+		- EXT_HEADER_TYPE_TOPOBROADCAST : flags (ubyte) (EXT_HEADER__VALUE_BLOCK_HOPS_No), number of hops (short)
 		- EXT_HEADER_TYPE_UNICAST : flags (ubyte) (EXT_HEADER__VALUE_BLOCK_IDs), List of IDs
 		- EXT_HEADER_TYPE_MULTICAST (not implemented) : flags (ubyte) (EXT_HEADER__VALUE_BLOCK_IDs), List of IDs
-		- EXT_HEADER_TYPE_GEOBROADCAST : flags (ubyte) (EXT_HEADER__VALUE_BLOCK_AREAs), List of Areas
+		- EXT_HEADER_TYPE_GEOBROADCAST : flags (ubyte) (EXT_HEADER__VALUE_BLOCK_AREAs or other for receiving from any dissemination area), List of Areas (if flag is EXT_HEADER__VALUE_BLOCK_AREAs)
 		- EXT_HEADER_TYPE_GEOUNICAST (not implemented) : flags (ubyte) (EXT_HEADER__VALUE_BLOCK_IDs), List of IDs (only one ID is authorized), flags (ubyte) (EXT_HEADER__VALUE_BLOCK_AREAs), List of Areas
-		- EXT_HEADER_TYPE_GEOANYCAST (not implemented) : flags (ubyte) (EXT_HEADER__VALUE_BLOCK_AREAs), List of Areas			
+		- EXT_HEADER_TYPE_GEOANYCAST (not implemented) : flags (ubyte) (EXT_HEADER__VALUE_BLOCK_AREAs or other for receiving from any dissemination area), List of Areas (if flag is EXT_HEADER__VALUE_BLOCK_AREAs)	
 	
 	List of IDs : 
 		- number of destinations (uint),  
@@ -188,7 +190,7 @@ Application message :
 Traffic Sim commande :
 	- HEADER__APP_MSG_TYPE (ubyte)
 	- Command mode (ubyte) : VALUE_SET_EDGE_TRAVELTIME, VALUE_RE_ROUTE, VALUE_SET_SPEED, VALUE_SLOW_DOWN
-	- Command, dépend of mode :
+	- Command, dépend on mode :
 		- VALUE_SET_EDGE_TRAVELTIME : station ID, number of weights (uint), number of weights x (TYPE_EDGE_ID (ubyte), Edge ID (string), TYPE_EDGE_TRAVELTIME (ubyte), weight (float))
 		- VALUE_RE_ROUTE : TYPE_STATION_ID (ubyte), number of station IDs (uint), number of station IDs x station ID (uint)
 		- VALUE_SET_SPEED : station ID (uint), new speed (float)
@@ -197,8 +199,117 @@ Traffic Sim commande :
 Traffic Sim Command Result :
 	- HEADER__APP_MSG_TYPE (ubyte)
 	- Command mode (ubyte) : VALUE_GET_EDGE_TRAVELTIME or VALUE_GET_ROUTE_VARIABLE
-	- Command, depends of mode :
+	- Command, depends on mode :
 		- VALUE_GET_EDGE_TRAVELTIME : station ID, number of weights (uint), number of weights x (Edge ID (string), TYPE_EDGE_TRAVELTIME (ubyte), weight (float))
 		- VALUE_GET_ROUTE_VARIABLE : station ID, number of route (uint), number of route x (TYPE_EDGES_ID_FROM_ROAD_ID (ubyte), Route ID (string))
 		
+		
+		
+		
+		
+CommandSendSubscriptionCarsInZone
+
+CMD_CARS_IN_ZONE
+
+		
+CommandSendSubcriptionCalculateTravelTimeFlags
+
+
+CMD_TRAVEL_TIME_ESTIMATION		
+
+CommandSendSubscriptionReceivedCamInfo
+
+CMD_RECEIVED_CAM_INFO
+		
+		
+CommandSendSubscriptionFacilitiesInfo
+
+CMD_FACILITIES_INFORMATION		
+		
+NotifyMessageStatus
+
+CMD_NOTIFY_APP_MESSAGE_STATUS
+
+		
+CommandSendSubscriptionAppMessageSend
+
+
+CMD_APP_MSG_SEND		
+		
+CommandSendSubscriptionAppMessageReceive
+		
+CMD_APP_MSG_RECEIVE
+		
+		
+CommandSendSubscriptionAppResultTraffSim
+
+CMD_APP_RESULT_TRAFF_SIM		
+
+------------------------------------------		
+Subscription of Extented Application Data
+------------------------------------------		
+		
+CMD_X_APPLICATION_DATA
+		
+------------------------------------------		
+Subscription of command Traffic Sim
+------------------------------------------
+
+CMD_APP_CMD_TRAFF_SIM
+
+----------------------------
+Application to Execute
+----------------------------
+		
+CMD_NOTIFY_APP_EXECUTE		
+		
+---------------------------
+End Subscription (ics->app)
+---------------------------
+	
+Ask  to the application if a subscription to be maintained or dropped
+
+- command length (int)
+- command id (ubyte) : CMD_END_SUBSCRIPTION
+- simulation timestep (int) 
+- node identifier (int)
+- subscription to be maintained or dropped (optionnal)	(see Request Subscription )
+		
+--------------------------------------------------
+End Subscription (with subscription id) (app->ics)
+--------------------------------------------------
+
+- Report Result State (see above)
+- command length (without Report Result State) (ubyte)
+- command id (ubyte) : CMD_END_SUBSCRIPTION
+- subscription status (ubyte) : CMD_DROP_SUBSCRIPTION or CMD_RENEW_SUBSCRIPTION
+		
+		
+-----------------------------------------------------
+End Subscription (without subscription id) (app->ics)
+-----------------------------------------------------
+
+- Report Result State (see above)
+
+N subscriptions to drop :
+	- command length (without Report Result State) (ubyte)
+	- command id (ubyte) : CMD_END_SUBSCRIPTION	
+	- subscription id : SUB_RETURNS_CARS_IN_ZONE or SUB_SET_CAM_AREA
+		
+----------------
+Close (ics->app)
+------- --------
+
+- command length (int)
+- command id (ubyte) : CMD_APP_CLOSE
+
+
+----------------
+Close (app->ics)
+------- --------
+
+- Report Result State (see above)
+
+
+
 
