@@ -576,7 +576,7 @@ public:
     /**
     * @brief Stores the received message.
     * @param[in] actionID ActionID associated to the message.
-    * @param[in] receivers Vector with the IDs of the receivers.
+    * @param[in] receivers Vector with the ICS IDs of the receivers.
     * @return TRUE The storage was successfully completed.
     * @return FALSE The storage was not completed.
     */
