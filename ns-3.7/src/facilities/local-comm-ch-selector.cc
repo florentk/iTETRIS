@@ -314,8 +314,15 @@ LocalCOMMchSelector::GetCommunicationCh(uint32_t commProfile, TechnologyList tec
   vsta = m_node->GetObject <VehicleStaMgnt> ();
   Ptr<MobilityModel> mob = m_node->GetObject<MobilityModel> ();
   
-  if (vsta != NULL)
-  {
+  //ADD by Florent Kaisser 01/26/2017
+  //if not VehicleStaMgnt, considere C2C stack is present
+  // NOTE : This is added beacause RSU node is not a VehicleStaMgnt object
+  if (vsta == NULL){
+    stacktodest = (stacktodestination*) malloc (sizeof (stacktodestination));
+    stacktodest->stack= C2C;
+    stacktodest->tech = (char*) malloc (1*sizeof (char));
+    stacktodest->tech = (char*) "";
+  }else{
   // Generic profile 1
   if (commProfile == 1)
   {
@@ -419,7 +426,7 @@ LocalCOMMchSelector::GetCommunicationCh(uint32_t commProfile, TechnologyList tec
          {
            NS_LOG_ERROR ("There is no ITSG5 technology available for node "<< m_node->GetId());
          }
-      }
+       }
     }
   }
   else
@@ -427,9 +434,6 @@ LocalCOMMchSelector::GetCommunicationCh(uint32_t commProfile, TechnologyList tec
     NS_LOG_ERROR ("Communication Profile Not found "<<commProfile);
   }
 
-  }
-  else {
-    NS_LOG_ERROR ("Vehicle Station Management is not installed in node"<<m_node);
   }
   return stacktodest;
 }
