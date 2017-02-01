@@ -34,5 +34,13 @@ August 2016 : Add SetColor command
 -----------------------------------
 - 08/27/2016 add feature to change color of a vehicle in SUMO. For the moment, iCS change color in RED when vehicle break to a new target speed (with VALUE_SLOW_DOWN or VALUE_SET_SPEED) and in GREEN when speed is restored (set speed with -1 value).
 
+January 2017 : Fix topobroadcast bugs
+--------------------------------------------------
+- 01/10/2017 fix bug in CommandStartTopoTxon from iCS : compute message site correctly. I read a curious comment in initial version : "Not sure if this works ", WTF ?!
+- 01/10/2017 fix bug in CalculateStringListByteSize from iCS : when nothing string, must be return 4 as size (the length of number of string field).
+- 01/26/2017 in local-comm-ch-selector.cpp from NS-3, if a node is a RSU, then the node had no VehicleStaMgnt. Thus, we considere C2C stack present.
+- 01/31/2017 fix bug in getReceivedMessagePayload from iCS : iFMT and iFPT must be used to retrieve the payload
+- 01/31/2017 fix bugs in ProcessTopobroadcastMessages from iCS : bad ID is insert in vReceiver and misinitialisation of ScheduledAPPMessageData
 
 
+  
