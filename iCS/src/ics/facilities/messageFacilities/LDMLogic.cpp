@@ -98,15 +98,22 @@ ReceivedMessage* LDMLogic::getReceivedMessage(actionID_t actionID) const {
 
 FacilityMessagePayload* LDMLogic::getReceivedMessagePayload(actionID_t actionID) const {
     ////////////////////////////
-    //CHANGED BY Florent Kaisser, 06/06/2016
-    // fix bug : change iFMT by iFPT
-    // here iFPT must be used to retrieve a the payload !
-    map<actionID_t, ReceivedMessage*>::const_iterator it = iFPT.find(actionID);
-    if (it == iFPT.end()) {
+    //CHANGED BY Florent Kaisser, 01/31/2017
+    // here iFMT and iFPT must be used to retrieve the payload !
+    map<actionID_t, ReceivedMessage*>::const_iterator it_iFPT = iFPT.find(actionID);
+    map<actionID_t, ReceivedMessage*>::const_iterator it_iFMT = iFMT.find(actionID);   
+    
+    if (it_iFPT == iFPT.end() && it_iFMT == iFMT.end()) {
         return NULL;
     }
-    //////////////////
-    return (FacilityMessagePayload*)(it->second->getPayload());
+
+    if (it_iFMT != iFMT.end())
+      return (FacilityMessagePayload*)(it_iFMT->second->getPayload());
+      
+    if (it_iFPT != iFPT.end())
+      return (FacilityMessagePayload*)(it_iFPT->second->getPayload());      
+      
+    //////////////////    
 }
 
 map<actionID_t, ReceivedMessage*>* LDMLogic::getLDM(stationID_t stationID) {
