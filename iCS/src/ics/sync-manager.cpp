@@ -1538,7 +1538,14 @@ SyncManager::ProcessTopobroadcastMessages(ScheduledTopobroadcastMessageData rcvM
                 actionID = (*messageIterator).actionID;
                 // Call the Facilities
                 vector<stationID_t> vReceiver;
-                vReceiver.push_back(receiverID);
+                ////////////////////////////
+                // MODIFIED by Florent KAISSER 01/31/2017
+                // fix bug : the IDs in vReceiver vector must be a iCS ID and not a NS-3 ID
+                //  use GetNodeByNs3Id to retrieve node from NS3 id
+                //  and use m_icsId of the node to add it in vReceiver vector 
+                ITetrisNode* receiver = GetNodeByNs3Id(receiverID);
+                vReceiver.push_back(receiver->m_icsId);
+                ////////////////////////////
                 m_facilitiesManager->storeMessage((*messageIterator).actionID,vReceiver);
                 rcvMessage.appMessageId = (*messageIterator).appMessageId;
 
@@ -1568,17 +1575,23 @@ SyncManager::ProcessTopobroadcastMessages(ScheduledTopobroadcastMessageData rcvM
                         }
                     } // the result of the node
                 } // the nodes
+                
+                ////////////////////////////
+                // MODIFIED by Florent KAISSER 01/31/2017
+                // initialize receiverNs3ID and appMessageType 
                 ScheduledAPPMessageData appMessage;
                 appMessage.senderNs3ID = rcvMessage.senderNs3ID;
+                appMessage.receiverNs3ID = receiverID;
                 appMessage.messageType = rcvMessage.messageType;
                 appMessage.timeStep = rcvMessage.timeStep;
                 appMessage.sequenceNumber = rcvMessage.sequenceNumber;
                 ITetrisNode* sender = GetNodeByNs3Id(rcvMessage.senderNs3ID);
                 appMessage.senderIcsID = sender->m_icsId;
-                ITetrisNode* receiver = GetNodeByNs3Id(receiverID);
                 appMessage.receiverIcsID = receiver->m_icsId;
                 appMessage.actionID = actionID;
                 appMessage.appMessageId = rcvMessage.appMessageId;
+                appMessage.appMessageType = m_facilitiesManager->getApplicationMessageType(actionID);
+                ////////////////////////////                
 
                 if (ProcessAppMessages(appMessage) == EXIT_FAILURE) {
 #ifdef LOG_ON
