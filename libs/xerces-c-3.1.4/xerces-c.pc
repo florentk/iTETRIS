@@ -1,0 +1,11 @@
+prefix=/usr/local
+exec_prefix=${prefix}
+libdir=${exec_prefix}/lib
+includedir=${prefix}/include
+
+Name: Xerces-C++
+Description: Validating XML parser library for C++
+Version: 3.1.4
+Libs: -L${libdir} -lxerces-c
+Libs.private: -L/usr/lib/x86_64-linux-gnu -lcurl
+Cflags: -I${includedir}

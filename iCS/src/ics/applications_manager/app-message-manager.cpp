@@ -602,7 +602,7 @@ AppMessageManager::CommandSendSubscriptionCarsInZone(vector<VehicleNode*>* carsI
     }
 
     int numberOfCars = (int)carsInZone->size();
-    int numberOfCarsSize = numberOfCars * (4 + 4 + 4);
+    int numberOfCarsSize = numberOfCars * (4 + 4 + 4 + 4 +4);
 
     // command length
     outMsg.writeInt(4 + 1 + 4 + 4 + 4 + numberOfCarsSize);
@@ -628,9 +628,21 @@ AppMessageManager::CommandSendSubscriptionCarsInZone(vector<VehicleNode*>* carsI
         outMsg.writeFloat(node->GetPositionX());
         //car position y
         outMsg.writeFloat(node->GetPositionY());
+        ////////////////////////////////////////
+        // ADDED by Florent KAISSER 02/21/2017
+        //
+        // write speed and heading to transmit them 
+        // to the application
+        //
+        //car speed
+        outMsg.writeFloat(node->GetSpeed());
+        //car heading
+        outMsg.writeFloat(node->GetHeading());
+        //
+        ////////////////////////////////////////
 
         stringstream log;
-        log << "[INFO] CommandSendSubscriptionCarsInZone() Node Id " << node->m_icsId << " X: " << node->GetPositionX() << " Y: " << node->GetPositionY();
+        log << "[INFO] CommandSendSubscriptionCarsInZone() Node Id " << node->m_icsId << " X: " << node->GetPositionX() << " Y: " << node->GetPositionY() << " Speed: " << node->GetSpeed() << " Direction: " << node->GetHeading();
         IcsLog::LogLevel((log.str()).c_str(), kLogLevelInfo);
 
     }
