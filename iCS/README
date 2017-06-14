@@ -50,7 +50,7 @@ ics/ : iCS source code
 	FacilitiesManager.cpp : methodes to manage map and stations features
 
 ics/application_manager/ : Manage iTetris application
-	app-message-manger.cpp : Manages the data exchange with the applications through a predefined brief set of commands.
+	app-message-manager.cpp : Manages the data exchange with the applications through a predefined brief set of commands.
 	application-handler.cpp : Manages the execution of the applications.
 
 

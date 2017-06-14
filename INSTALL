@@ -12,14 +12,14 @@ sudo apt-get install autoconf automake libtool g++ libxml++2.6-dev libgdal1-dev 
 
 install geographiclib
 ---------------------
-cd iCS/libs/geographiclib-1.2
+cd libs/geographiclib-1.2
 ./configure
 make
 sudo make install
 
-install xerces-c-3.0.1 
+install xerces-c-3.1.4 
 ----------------------
-cd iCS/libs/xerces-c-3.0.1
+cd libs/xerces-c-3.1.4
 ./configure
 make
 sudo make install
