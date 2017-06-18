@@ -78,6 +78,10 @@ StationsGetConfig::StationsGetConfig() {
     ATTR_FixRATtype                 = XMLString::transcode("RAT-type");
     ATTR_enabledRAT                 = XMLString::transcode("enabledRAT");
     ATTR_FixedCommunicationProfile  = XMLString::transcode("communication-profile");
+    
+    TAG_PredefStas					= XMLString::transcode("predefStas");;
+    TAG_PredefSta					= XMLString::transcode("predefSta");;   
+    ATTR_TsId						= XMLString::transcode("tsId");;    
 
     m_ConfigFileParser = new XercesDOMParser;
 }
@@ -105,6 +109,9 @@ StationsGetConfig::~StationsGetConfig() {
     delete[] ATTR_FixRATtype;
     delete[] ATTR_enabledRAT;
     delete[] ATTR_FixedCommunicationProfile;
+    delete[] TAG_PredefStas;
+    delete[] TAG_PredefSta;
+    delete[] ATTR_TsId;
 }
 
 /**
@@ -266,6 +273,33 @@ throw(std::runtime_error) {
                             }
                         }
                     }
+                    
+                    // parse "TAG_PredefStas"
+                    if (XMLString::equals(_element->getTagName(), TAG_PredefStas)) {
+                        DOMNodeList* children2 = _element->getChildNodes();
+                        for (XMLSize_t index = 0; index < children2->getLength(); ++index) {
+                            if (XMLString::equals(children2->item(index)->getNodeName(), TAG_PredefSta)) {
+                                DOMNode* currentNode = children2->item(index);
+                                if (currentNode->getNodeType() &&  // true is not NULL
+                                        currentNode->getNodeType() == DOMNode::ELEMENT_NODE) { // is element
+                                    DOMElement* currentElement = dynamic_cast< xercesc::DOMElement* >(currentNode);
+                                    
+                                    ics_types::stationID_t icsid;
+
+                                    const XMLCh* xmlch_id = currentElement->getAttribute(ATTR_id);
+                                    char* m_ID_ch = XMLString::transcode(xmlch_id);
+                                    sscanf(m_ID_ch, "%u", &icsid);
+                                    delete[] m_ID_ch;
+
+                                    const XMLCh* xmlch_tsid = currentElement->getAttribute(ATTR_TsId);
+                                    char* m_tsID_ch = XMLString::transcode(xmlch_tsid);
+                                    predefId.insert(std::pair<string,ics_types::stationID_t>(m_tsID_ch,icsid)); 
+                                    delete[] m_tsID_ch;
+                                }
+                            }
+                        }
+                    }                    
+                    
 
                 }
             }
@@ -298,6 +332,10 @@ vector<FixedStationStr>    StationsGetConfig::getFixedStationCollection() {
 
 map <int, string>          StationsGetConfig::getMobileCommunicationProfiles() {
     return mobileCommunicationProfiles;
+}
+
+map <string,ics_types::stationID_t>		StationsGetConfig::getPredefId() {
+	return predefId;
 }
 
 }

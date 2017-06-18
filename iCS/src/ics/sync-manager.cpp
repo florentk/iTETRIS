@@ -406,7 +406,15 @@ SyncManager::RunOneSumoTimeStep()
     vector<string> nodesToActivateInNs3;
     for (vector<string>::const_iterator i = departed.begin(); i != departed.end(); ++i) {
         if (ITetrisSimulationConfig::HasRat()) {
-            VehicleNode* vehicle = new VehicleNode(*i);
+            VehicleNode* vehicle;
+
+            ics_types::stationID_t iCSId = m_facilitiesManager->getPredefICSidFromTSId(*i);
+
+            //use a specific iCS ID if an association exist with traffic simulator vehicle ID
+            if(iCSId == 0)
+				vehicle = new VehicleNode(*i);
+            else
+				vehicle = new VehicleNode(*i,iCSId);
 
             {
                 stringstream log;

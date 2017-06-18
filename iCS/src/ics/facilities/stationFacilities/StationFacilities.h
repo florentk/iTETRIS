@@ -206,6 +206,12 @@ public:
     * @return a map containing the radio access technology (key) and the associated communication profile (value).
     */
     const map<RATID, string>& getDefaultCommunicationProfiles() const;
+    
+    /**
+    * @brief Returns the predefined iCS IDs
+    * @return a map containing the sumo id (key) and the associated iCS id (value).
+    */
+    const map<string, ics_types::stationID_t>& getDefaultPredefId() const;    
 
     bool isStationOfType(stationID_t stationID, icsstationtype_t type);
 
@@ -222,7 +228,10 @@ private:
 
     ///@brief Communication profiles for the mobile stations given the RATs
     map<RATID, string> defaultCommunicationProfiles;
-
+    
+    ///@brief Predefined iCS IDs. The map match sumo Id with iCS Id
+    map<string, ics_types::stationID_t> defaultPredefId;
+ 
     ///@brief Random generator used to assign the radio access technologies to mobile nodes entering the scenario.
     ics::iCSRandom staFacRand;
 

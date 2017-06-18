@@ -112,7 +112,7 @@ public:
 
     const map<RATID, float>& getDefaultPenetrationRates() const;
     const map<RATID, string>& getDefaultCommunicationProfiles() const;
-
+    const map<string, ics_types::stationID_t>& getDefaultPredefId() const;
 
     // ===============================================================
     // ====================== LDM related       ======================

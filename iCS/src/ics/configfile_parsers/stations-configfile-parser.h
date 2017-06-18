@@ -42,6 +42,9 @@
 
 #include <vector>
 #include <map>
+
+#include "../../utils/ics/iCStypes.h"
+
 using namespace std;
 
 namespace ics_parsing {
@@ -74,6 +77,7 @@ public:
     map <int, float>            getDefaultPenetrationRates();
     vector<FixedStationStr>     getFixedStationCollection();
     map <int, string>           getMobileCommunicationProfiles();
+    map <string,ics_types::stationID_t>			getPredefId();
 
 private:
     xercesc::XercesDOMParser    *m_ConfigFileParser;
@@ -82,6 +86,7 @@ private:
     unsigned int                RATseed;
     map <int, float>            defaultPenetrationRates;
     map <int, string>           mobileCommunicationProfiles;
+    map <string,ics_types::stationID_t>			predefId;
     vector<FixedStationStr>     m_FixedStationCollection;
 
     XMLCh* TAG_Default;
@@ -98,12 +103,17 @@ private:
 
     XMLCh* TAG_FixedStas;
     XMLCh* TAG_FixedSta;
+    
     XMLCh* ATTR_id;
     XMLCh* ATTR_x;
     XMLCh* ATTR_y;
     XMLCh* ATTR_FixRATtype;
     XMLCh* ATTR_enabledRAT;
     XMLCh* ATTR_FixedCommunicationProfile;
+    
+    XMLCh* TAG_PredefStas;
+    XMLCh* TAG_PredefSta;   
+    XMLCh* ATTR_TsId;     
 };
 
 }//namespace

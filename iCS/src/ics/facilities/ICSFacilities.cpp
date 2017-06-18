@@ -353,6 +353,14 @@ const map<RATID, string>& ICSFacilities::getDefaultCommunicationProfiles() const
 }
 
 
+const map<string, ics_types::stationID_t>& ICSFacilities::getDefaultPredefId() const {
+    if (staFac != NULL)
+        return staFac->getDefaultPredefId();
+    cerr << "[facilities] ERROR: Station Facilities not allocated by the ICSFacilities" << endl;
+    abort();
+}
+
+
 // ===============================================================
 // ====================== LDM related       ======================
 // ===============================================================

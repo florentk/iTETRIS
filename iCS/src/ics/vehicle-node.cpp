@@ -42,6 +42,26 @@ namespace ics
 // ===========================================================================
 // member method definitions
 // ===========================================================================
+
+VehicleNode::VehicleNode(const std::string &nodeId, ics_types::stationID_t iCSId)
+{
+
+	m_preAssignedIds.insert(iCSId);
+
+    m_nsId = 0;
+    m_tsId = nodeId;
+    m_icsId = iCSId;
+    m_moved = false;
+    m_type = staType_CAR;
+    m_lastSpeed = -1;
+    m_currentSpeed = -1;
+
+    stringstream log;
+    log << "VehicleNode() Created vehicle with iCS ID: " << m_icsId;
+    IcsLog::LogLevel((log.str()).c_str(), kLogLevelInfo);
+
+}
+
 VehicleNode::VehicleNode(const std::string &nodeId) : ITetrisNode()
 {
     m_nsId = 0;

@@ -897,7 +897,11 @@ public:
     vector<TCamInformation>* getInfoFromLastCAMsReceivedByStation(stationID_t stationID);
 
 
-
+    /**
+    * @brief Returns the predef ICS id from the traffic simulator vehicle id
+    * @param[in] traffic simulator id
+    */
+    ics_types::stationID_t getPredefICSidFromTSId(string tsID);
 
 private:
 

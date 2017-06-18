@@ -41,6 +41,13 @@ public:
     * @param[in] nodeId Vehicle identifier.
     */
     VehicleNode(const std::string &nodeId);
+    
+    /**
+    * @brief Constructor.
+    * @param[in] nodeId Vehicle identifier.
+    * @param[in] iCSId Desired iCS identifier.    
+    */
+    VehicleNode(const std::string &nodeId, ics_types::stationID_t iCSId);    
 
     /// @brief True if the vehicle moved since the last time-step.
     bool m_moved;

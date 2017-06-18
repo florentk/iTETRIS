@@ -81,8 +81,15 @@ bool StationFacilities::configure(string stationConfigFilename) {
     for (itCommProfile = commProfiles.begin(); itCommProfile != commProfiles.end(); itCommProfile++)
         defaultCommunicationProfiles.insert(pair<RATID, string> ((RATID) itCommProfile->first, itCommProfile->second));
     commProfiles.clear();
+    
+    map<string,ics_types::stationID_t> predefId = staConfig.getPredefId();
+    map<string,ics_types::stationID_t>::iterator itPredefid;
+    for (itPredefid = predefId.begin(); itPredefid != predefId.end(); itPredefid++)
+        defaultPredefId.insert(pair<string, ics_types::stationID_t> ( itPredefid->first, itPredefid->second));
+    predefId.clear();  
 
     vector<ics_parsing::FixedStationStr> fixedStationStrVec = staConfig.getFixedStationCollection();
+    
 #ifdef _DEBUG_STATIONS
     cout << "[facilities] - Number of Fixed stations to be created: " << fixedStationStrVec.size() << endl;
 #endif
@@ -571,6 +578,10 @@ const map<RATID, float>& StationFacilities::getDefaultPenetrationRates() const {
 
 const map<RATID, string>& StationFacilities::getDefaultCommunicationProfiles() const {
     return defaultCommunicationProfiles;
+}
+
+const map<string, ics_types::stationID_t>& StationFacilities::getDefaultPredefId() const {
+    return defaultPredefId;
 }
 
 bool StationFacilities::isStationOfType(stationID_t stationID, icsstationtype_t type) {

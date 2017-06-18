@@ -1158,6 +1158,18 @@ vector<TCamInformation>*                FacilitiesManager::getInfoFromLastCAMsRe
     return info;
 }
 
+ics_types::stationID_t FacilitiesManager::getPredefICSidFromTSId(string tsID) {
+	std::map<string,ics_types::stationID_t> predefIds = facilities->getDefaultPredefId();
+	std::map<string,ics_types::stationID_t>::iterator it; 
+	
+	it = predefIds.find(tsID);
+	
+    if(it != predefIds.end())
+      return it->second;
+	
+	return 0;
+}
+
 unsigned char                       FacilitiesManager::getApplicationMessagePreferredTechnologies(actionID_t actionID) {
     FacilityMessagePayload* facPayload = getReceivedMessagePayload(actionID);
     messageType_t messageType = facPayload->getMessageType();
